@@ -1,0 +1,80 @@
+<!-- <div ng-include="'app/components/navbar/navbar.html'"></div>
+ -->
+<div class="container">
+    <div class="row">
+<!--         <div class="col-md-4">
+            <div class="list-admin-users">
+                <ul>
+                    <h2>All Users</h2>
+                    <li ng-repeat="user in users">
+                        <p>{{ user.name }} - {{ user.email }}
+                            <button ng-click="deleteUser(user)" class="btn btn-sm btn-warning" data-title="DELETE User  -  Cannot be Undone" bs-tooltip>DELETE</button>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+
+        <div class="col-md-8">
+<table st-safe-src="rowCollection" st-table="displayCollection" class="table table-striped">
+    <thead>
+        <tr>
+            <th st-sort="name">first name</th>
+            <th st-sort="email">last name</th>
+            <th st-sort="provider">strict search</th>
+            <th st-sort="role">strict select</th>
+			<th st-sort="role">Ein</th>
+        </tr>
+        <tr>
+            <th>
+                <input st-search="name" placeholder="search for name" class="input-sm form-control" type="search"/>
+            </th>
+            <th>
+                <input st-search="email" placeholder="search for email" class="input-sm form-control" type="search"/>
+            </th>
+            <th>
+                <input st-search="provider" placeholder="search for equal match" class="input-sm form-control" type="search"/>
+            </th>
+            <th>
+                <select st-search="role">
+                    <option value="">All</option>
+                    <option ng-repeat="row in rowCollection | unique:'role'" value="{{row.role}}">{{row.role}}</option>
+                </select>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in displayCollection">
+            <td>{{row.name | uppercase}}</td>
+            <td>{{row.email | lowercase}}</td>
+            <td>{{row.provider}}</td>
+            <td>{{row.role}}</td>
+			<td>{{row.ein}}</td>
+            <td><button ng-click="deleteUser(row)" class="btn btn-sm btn-warning" data-title="DELETE User  -  Cannot be Undone" bs-tooltip>DELETE</button></td>		
+            <td>
+        <button class="lookLink"
+             ng-click="editLook(row)"
+             data-template-url="app/admin/remove_look_modal.html"
+             data-animation="am-fade-and-scale"
+             bs-modal="showModal">Activate
+          </button></td>
+            <td>
+        <button class="lookLink"
+             ng-click="validate(row)"
+             data-template-url="app/admin/addLookModal.html"
+             data-animation="am-fade-and-scale"
+             bs-modal="showModal">Validate
+          </button></td>		  
+        </tr>
+    </tbody>
+			<tfoot>
+			<tr>
+				<td colspan="5" class="text-center">
+					<div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+				</td>
+			</tr>
+		</tfoot>
+</table>
+        </div>
+    </div>
+</div>

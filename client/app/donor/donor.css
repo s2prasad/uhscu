@@ -1,0 +1,18 @@
+.list-donor-users li{
+  list-style: none;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.list-donor-users button {
+  margin-left: 10px;
+}
+
+.listing-images-donor img{
+  max-height: 150px;
+  max-width: 150px;
+}
+
+.listing-delete-btn button {
+  margin-left: 15px;
+}

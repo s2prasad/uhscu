@@ -1,0 +1,70 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" ng-show="title">
+        <button type="button"
+                    class="close"
+                    ng-click="$hide()">&times;</button>
+      </div>
+
+    <div class="modal-body" ng-show="content">
+      <div class="edit-look-title">
+       <h2>Details</h2>
+      </div>
+
+<!--       <div class="form-group">
+        <label for="title">Title</label>
+          <input type="text"
+                  class="form-control title-input"
+                  placeholder="{{ editLook.name }}"
+                  ng-model="editLook.name" />
+      </div> -->
+
+      <div class="form-group">
+        <div class="row listing-description-row">
+        <label for="Name"  class="col-xs-12">
+		 Name : {{ user.name }} </br>
+		 Address : {{ user.address }} </br>
+		 City : {{ user.city }} </br>
+		 Zip:{{user.zipcode}} </br>
+		 Ein:{{user.ein}} </br>
+		 CareOfName:{{user.careofname}}</br>
+		 Ntee Code:{{user.ntee_code}}</br>
+		 Foundation Code: {{user.foundation_code}}</br>
+		 Ruling Date: {{user.ruling_date}}</br>
+		 Affiliation Code: {{user.affiliation_code}}</br>
+		 Classification Code: {{user.classification_codes}}</br>
+		 Exempt Code:{{user.exempt_organization_status_code}}</br>
+		 		 
+		 </label>
+<!--           <textarea type="text"
+                  class="form-control description-textarea"
+                  value="{{ user.description }}"
+                  ng-model="user.description"
+                  rows="1" /> -->
+            </div>
+          </div>
+
+<!--       <div class="form-group">
+        <div class="row listing-delete-btn">
+          <button ng-click="editLook(look)"
+                      class="btn btn-warning btn-lg"
+                      ng-show="deleteBtn">Activate/Deactivate</button>
+            </div> -->
+          </div>
+
+
+       <div class="col-md-6" id="alertContainer"></div>
+
+        </div>
+      <div class="modal-footer">
+        <button type="button"
+                    class="btn btn-default pull-left"
+                    ng-click="$hide()">Close</button>
+<!--         <button type="button"
+          class="btn btn-primary btn-md pull-left"
+          ng-click="saveLook()">Save Edits</button> -->
+      </div>
+    </div>
+  </div>
+</div>

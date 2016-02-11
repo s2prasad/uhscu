@@ -1,0 +1,52 @@
+<!-- <div ng-include="'app/components/navbar/navbar.html'"></div>
+ -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-admin-users">
+                <ul>
+                    <h2>All Users</h2>
+                    <li ng-repeat="user in users">
+                        <p>{{ user.name }} - {{ user.email }}
+                            <button ng-click="deleteUser(user)" class="btn btn-sm btn-warning" data-title="DELETE User  -  Cannot be Undone" bs-tooltip>DELETE</button>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <table st-table="users" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>first name</th>
+                        <th>last name</th>
+                        <th>birth date</th>
+                        <th>balance</th>
+                        <th>email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in users">
+                        <td>{{row.name | uppercase}}</td>
+                        <td>{{row.email}}</td>
+                        <!--
+		<td>{{row.birthDate | date}}</td>
+		<td>{{row.balance | currency}}</td>
+-->
+                        <td>
+                            <button class="btn btn-sm" popover-placement="top" popover="{{row.email}}" type="button">
+                                <i class="glyphicon glyphicon-eye-open"></i>
+                            </button>
+                            <a ng-href="mailto:{{row.email}}">email</a></td>
+                        <td>
+                            <button type="button" ng-click="deleteUser(user)"
+                                class="btn btn-sm btn-warning" data-title="DELETE User  -  Cannot be Undone" bs-tooltip>DELETE
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
