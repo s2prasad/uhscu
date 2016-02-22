@@ -52,7 +52,7 @@
   "description": "From the command line navigate to this folder and run:\r 1. npm install\r 2. bower install",
   "devDependencies": {},
   "scripts": {
-    "start": "node app.js",
+    "start": "node server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
