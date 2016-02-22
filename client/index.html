@@ -18,14 +18,16 @@
       <link rel="stylesheet" href="app/transporter/transporter.css">      
       <link rel="stylesheet" href="app/components/navbar/navbar.css">
       <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css">
+	  <link rel="stylesheet" href="bower_components/angular-google-places-autocomplete/src/autocomplete.css">
+	  <link rel="stylesheet" href="bower_components/angular-ui-bootstrap-datetimepicker/datetimepicker.css">
       <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
 
   <body ng-app="app">
     <div ng-include="'app/components/navbar/navbar.html'"></div>
   <div ui-view></div>
-
-      <script src="bower_components/jquery/dist/jquery.js"></script>
+	
+      <script src="bower_components/jquery/dist/jquery.min.js"></script>
       <script src="bower_components/angular/angular.js"></script>
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -40,7 +42,15 @@
       <script src='bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'></script>
       <script src="bower_components/moment/moment.js"></script>
       <script src="bower_components/angular-moment/angular-moment.min.js"></script>
-
+	  <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	  <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+	  <script src="bower_components/angular-google-places-autocomplete/src/autocomplete.js"></script>
+	  <script src="bower_components/api-check/dist/api-check.min.js"></script>
+	  <script src="bower_components/angular-formly/dist/formly.min.js"></script>
+	  <script src="bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.min.js"></script>
+	  <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+	 
+	 
       <script src="app/app.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/account/forgotpassword/forgotpassword.controller.js"></script>

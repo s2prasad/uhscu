@@ -14,13 +14,18 @@ var UserSchema = new Schema({
   role: String,
   hashedPassword: String,
   ein:String,
-  provider: String,
+  provider: String,//remove
+  rssUrls: Array,//remove
   salt: String,
   status:String,
-  facebook: {},
-  twitter: {},
-  github: {},
-  rssUrls: Array
+  address:String,
+  location:Object,
+  companyInfo:Object,
+  foodRecoveryInfo:Object,
+  donorInfo:Object,
+  receiverInfo:Object,
+  transporterInfo:Object,
+  vehicleInfo:Object
 });
 
 /**

@@ -44,7 +44,7 @@
         <a ui-sref="login" id="nav-internal">Login</a></li>
 
         <li ng-show="isLoggedIn()">
-        <p class="navbar-text">{{ getCurrentUser().name }}</p> </li>
+        <p class="navbar-text">{{ getCurrentUser().email }}</p> </li>
 
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}">
         <a href="/settings"><span class="glyphicon glyphicon-cog"></span></a></li>

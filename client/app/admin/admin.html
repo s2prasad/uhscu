@@ -16,7 +16,7 @@
         </div> -->
 
         <div class="col-md-8">
-<table st-safe-src="rowCollection" st-table="displayCollection" class="table table-striped">
+<table st-safe-src="users" st-table="displayCollection" class="table table-striped">
     <thead>
         <tr>
             <th st-sort="name">first name</th>
@@ -38,7 +38,7 @@
             <th>
                 <select st-search="role">
                     <option value="">All</option>
-                    <option ng-repeat="row in rowCollection | unique:'role'" value="{{row.role}}">{{row.role}}</option>
+                    <option ng-repeat="row in users | unique:'role'" value="{{row.role}}">{{row.role}}</option>
                 </select>
             </th>
         </tr>
@@ -62,7 +62,7 @@
         <button class="lookLink"
              ng-click="validate(row)"
              data-template-url="app/admin/addLookModal.html"
-             data-animation="am-fade-and-scale"
+             data-animation="am-flip-x"
              bs-modal="showModal">Validate
           </button></td>		  
         </tr>

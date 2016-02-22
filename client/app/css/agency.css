@@ -4,8 +4,10 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 body {
-  overflow-x: hidden;
+  /* margin: 20px; */
+  overflow-x: auto;
   font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  
 
 .text-muted {
   color: #777; }
@@ -387,3 +389,53 @@ body {
   border-radius: 10px;
   border: 2px solid #222;
   overflow: hidden; }
+
+.container1 {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    padding: 20px;
+    top: 20px;
+    -webkit-box-shadow: 0 2px 2px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 2px 1px rgba(0,0,0,0.2);
+}
+.formly-field {
+  margin-bottom: 16px;
+}
+
+.error-message {
+  color: red;
+  font-size: .9em;
+}
+
+.form-group {
+  position: relative;
+}
+
+.loader { 
+  position: absolute;
+  right: 40px;
+  top: 10px;
+  -webkit-animation: rotation 1.5s infinite linear;
+  animation: rotation 1.5s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}

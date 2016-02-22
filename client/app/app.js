@@ -12,7 +12,12 @@
       'angularGrid',
 	  'smart-table',
       'angularMoment',
-      'mgcrea.ngStrap'
+      'mgcrea.ngStrap',
+	  'google.places',
+	  'formly',
+	  'formlyBootstrap',	  
+	  'ui.bootstrap',
+	  'ngMessages'
     ])
     .config(config)
     .run(run)

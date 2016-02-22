@@ -72,7 +72,7 @@
     $scope.validate=function(data) {
 		console.log("data",data);
 		var ein=data.ein;
-      if (ein.length > 5) {
+      if (ein!= undefined && ein.length > 5) {
         $scope.loading = true;
         var link = {ein:ein};
         $http.post('/api/admin/getinfo',link)
@@ -96,14 +96,15 @@
             $scope.uploadLookForm = false;
           });
       }
+	  else $scope.user={};
     };
 	
     adminAPI.getAllUsers()
       .then(function(data) {
-        $scope.rowCollection = data.data;
+        $scope.users = data.data;
 		$scope.itemsByPage=5;
 
-		$scope.displayCollection = [].concat($scope.rowCollection);
+		$scope.displayCollection = [].concat($scope.users);
 
 		$scope.predicates = ['name', 'email', 'provider', 'role'];
 		$scope.selectedPredicate = $scope.predicates[0];
@@ -113,20 +114,12 @@
         console.log(err);
       });
 
-    looksAPI.getAllLooks()
-      .then(function(data) {
-        console.log(data);
-        $scope.looks = data.data;
-      })
-      .catch(function(err) {
-        console.log('failed to get all looks');
-      })
 
     $scope.deleteUser = function(user) {
+		var index = $scope.users.indexOf(user);
       adminAPI.deleteUser(user)
         .then(function(data) {
-          console.log('deleted user');
-          var index = $scope.users.indexOf(user);
+          console.log('deleted user',index,user);
           $scope.users.splice(index, 1);
         })
         .catch(function(err) {
@@ -138,8 +131,8 @@
     $scope.editLook = function(user) {
 		console.log(user);
 		console.log($scope);
-		$scope.editLook=user;
-		return $scope.editLook;
+		$scope.user=user;
+		return $scope.user;
       // looksAPI.getUpdateLook(look)
         // .then(function(data) {
           // console.log(data);
@@ -167,22 +160,22 @@
         });
     }
 
-    $scope.deleteLook = function(look) {
-      looksAPI.deleteLook(look)
-        .then(function(data) {
-          var index = $scope.looks.indexOf(look);
-          $scope.editLook.description = '';
-          $scope.editLook.title = '';
-          $scope.deleteBtn = false;
-          alertSuccess.show();
-          $scope.looks.splice(index, 1);
-          console.log('success, look deleted');
-        })
-        .catch(function(err) {
-          alertFail.show();
-          console.log('failed to delete look' + err);
-        });
-    }
+    // $scope.deleteLook = function(look) {
+      // looksAPI.deleteLook(look)
+        // .then(function(data) {
+          // var index = $scope.looks.indexOf(look);
+          // $scope.editLook.description = '';
+          // $scope.editLook.title = '';
+          // $scope.deleteBtn = false;
+          // alertSuccess.show();
+          // $scope.looks.splice(index, 1);
+          // console.log('success, look deleted');
+        // })
+        // .catch(function(err) {
+          // alertFail.show();
+          // console.log('failed to delete look' + err);
+        // });
+    // }
 
   }
 })();

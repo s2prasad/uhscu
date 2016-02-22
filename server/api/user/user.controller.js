@@ -4,6 +4,7 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var _= require('underscore');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -24,13 +25,48 @@ exports.index = function(req, res) {
  * Creates a new user
  */
 exports.create = function (req, res, next) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.status = 'inactive';
+  var item=req.body;
+  var address= item.location.formatted_address;
+  var location=item.location.geometry;
+  item=_.omit(item,'location');
+  var userObj={};
+	var receiverObj={},donorObj={},transporterObj={},companyObj={},foodRecoveryObj={},vehicleObj={};
+	var prop;
+		for(prop in item) {
+			if (prop.indexOf('donor') > -1)
+				donorObj[prop]=item[prop];
+			if (prop.indexOf('receiver') > -1)
+				receiverObj[prop]=item[prop];
+			if (prop.indexOf('transporter') > -1)
+				transporterObj[prop]=item[prop];
+			if (prop.indexOf('vehicle') > -1)
+				vehicleObj[prop]=item[prop];
+			if (prop.indexOf('foodRecovery') > -1)
+				foodRecoveryObj[prop]=item[prop];
+			if (prop.indexOf('company') > -1)
+				companyObj[prop]=item[prop];
+		}
+	userObj.donorInfo=donorObj;
+	userObj.receiverInfo=receiverObj;
+	userObj.transporterInfo=transporterObj;
+	userObj.vehicleInfo=vehicleObj;
+	userObj.foodRecoveryInfo=foodRecoveryObj;
+	userObj.companyInfo=companyObj;
+  var newUser = new User(userObj);
+  newUser.name=item.loginName;
+  newUser.email=item.email;
+  newUser.ein=item.ein;
+  newUser.password=item.password;
+  newUser.role=item.role;
+  newUser.address=address;
+  newUser.location=location;
+  newUser.status = 'inactive';console.log("here1 ",newUser);
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
+	if(err) console.log(err);
+    //var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+	 res.status("200").json(obj)
+    //res("Your request will be processed.");
   });
 };
 

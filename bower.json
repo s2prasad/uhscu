@@ -2,11 +2,11 @@
   "name": "BestDressed",
   "version": "1.0.0",
   "dependencies": {
-    "angular": "~1.4.0",
+    "angular": "^1.5.0",
     "json3": "~3.3.1",
     "es5-shim": "~3.3.1",
     "jquery": "~1.11.0",
-    "bootstrap": "~3.1.1",
+    "bootstrap": "^3.3.6",
     "angular-resource": "~1.4.0",
     "angular-cookies": "~1.4.0",
     "angular-sanitize": "~1.4.0",
@@ -20,6 +20,15 @@
     "ngInfiniteScroll": "~1.2.1",
     "angular-moment": "~0.10.3",
     "moment": "~2.10.6",
-    "angular-motion": "^0.4.3"
+    "angular-motion": "^0.4.3",
+    "ui-bootstrap": "^1.1.2",
+    "angular-bootstrap": "^1.1.2",
+    "api-check": "^7.5.5",
+    "angular-formly": "^7.3.9",
+    "angular-formly-templates-bootstrap": "^6.2.0",
+    "angular-ui-bootstrap-datetimepicker": "^0.14.4"
+  },
+  "resolutions": {
+    "angular": "^1.5.0"
   }
 }
