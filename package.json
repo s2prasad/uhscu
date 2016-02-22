@@ -38,7 +38,8 @@
     "path": "*",
     "request": "^2.65.0",
     "requirejs": "^2.1.18",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "underscore":"*"
   },
   "engines": {
     "node": ">=0.10.0"
