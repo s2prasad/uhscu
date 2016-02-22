@@ -13,7 +13,7 @@ var UserSchema = new Schema({
   },
   role: String,
   hashedPassword: String,
-  ein:String,
+  ein:{ type: String, default: '0' },
   provider: String,//remove
   rssUrls: Array,//remove
   salt: String,
