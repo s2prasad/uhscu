@@ -50,8 +50,14 @@
     "grunt-contrib-watch": "^0.6.1"
   },
   "description": "From the command line navigate to this folder and run:\r 1. npm install\r 2. bower install",
+  "devDependencies": {},
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vyompvscu/urbanharvesterscu/"
   },
   "author": "",
   "license": "ISC"
