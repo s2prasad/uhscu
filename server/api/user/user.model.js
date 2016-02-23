@@ -20,6 +20,7 @@ var UserSchema = new Schema({
   status:String,
   address:String,
   location:Object,
+  registeredDate:String,
   companyInfo:Object,
   foodRecoveryInfo:Object,
   donorInfo:Object,

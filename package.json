@@ -39,19 +39,15 @@
     "request": "^2.65.0",
     "requirejs": "^2.1.18",
     "serve-favicon": "^2.3.0",
-    "underscore":"*"
+    "underscore": "*",
+    "moment-timezone": "*"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "private": true,
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-watch": "^0.6.1"
-  },
-  "description": "From the command line navigate to this folder and run:\r 1. npm install\r 2. bower install",
   "devDependencies": {},
+  "description": "From the command line navigate to this folder and run:\r 1. npm install\r 2. bower install",
   "scripts": {
     "start": "node server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -60,6 +56,6 @@
     "type": "git",
     "url": "https://github.com/vyompvscu/urbanharvesterscu/"
   },
-  "author": "",
+  "author": "Vyomesh P V",
   "license": "ISC"
 }
