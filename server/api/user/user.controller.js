@@ -67,7 +67,7 @@ exports.create = function (req, res, next) {
 	if(err) console.log(err);
     var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
 	 //res.status("200").json(obj)
-    res("Your request will be processed.");
+    res.json({token: token});
   });
 };
 
