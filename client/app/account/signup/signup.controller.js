@@ -601,7 +601,7 @@
 			key: 'receiverRefrigeratedItem',
 			type: 'singleselect',
 			templateOptions: {
-				label: 'Do you have freezer?',
+				label: 'Do you have refrigerator?',
 				required: true,
 				options: [
 				  {"name": "Yes","value": "yes"},

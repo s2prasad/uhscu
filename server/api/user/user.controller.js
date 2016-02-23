@@ -63,7 +63,7 @@ exports.create = function (req, res, next) {
   newUser.role=item.role;
   newUser.address=address;
   newUser.location=location;
-  newUser.status = 'inactive';console.log("here1 ",newUser);
+  newUser.status = 'inactive';//console.log("here1 ",newUser);
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
 	if(err) console.log(err);
