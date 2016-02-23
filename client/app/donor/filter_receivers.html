@@ -9,17 +9,24 @@
 
     <div class="modal-body" ng-show="content">
       <div class="edit-look-title">
-       <h2>Edit Look</h2>
+       <h2>Filter Receivers</h2>
       </div>
 
       <div class="form-group">
         <label for="title">Title</label>
           <input type="text"
                   class="form-control title-input"
-                  placeholder="{{ editLook.title }}"
-                  ng-model="editLook.title" />
+                  ng-model="list.name" /></br>
+		 <label for="description">Description</label>
+		   <input type="text"
+                  class="form-control title-input"
+                  ng-model="list.detail" /></br>
+		 <label for="quantity">Quantity</label>
+		   <input type="text"
+                  class="form-control title-input"
+                  ng-model="list.quantity" /></br>				  
       </div>
-
+<!-- 
       <div class="form-group">
         <div class="row listing-description-row">
         <label for="description"
@@ -38,11 +45,10 @@
                       class="btn btn-warning btn-lg"
                       ng-show="deleteBtn">DELETE LOOK</button>
             </div>
-          </div>
+          </div>-->
 
 
-       <div class="col-md-6" id="alertContainer"></div>
-
+       <div class="col-md-6" id="alertContainer"></div> 
         </div>
       <div class="modal-footer">
         <button type="button"
@@ -50,7 +56,7 @@
                     ng-click="$hide()">Close</button>
         <button type="button"
           class="btn btn-primary btn-md pull-left"
-          ng-click="saveLook()">Save Edits</button>
+          ng-click="pushItem(this.list)">Save Item</button>
       </div>
     </div>
   </div>

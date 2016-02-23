@@ -5,11 +5,13 @@
     .module('app')
     .controller('DonorCtrl', DonorCtrl);
 
-  DonorCtrl.$inject = ['$scope', 'Auth', '$modal', 'donatorAPI', '$alert', 'looksAPI'];
+  DonorCtrl.$inject = ['$scope', 'Auth', '$modal', 'donorAPI', '$alert', 'looksAPI'];
 
-  function DonorCtrl($scope, Auth, $modal, donatorAPI, $alert, looksAPI) {
+  function DonorCtrl($scope, Auth, $modal, donorAPI, $alert, looksAPI) {
 
-    $scope.looks = [];
+	$scope.lists = [];
+	$scope.item={};
+    $scope.looks = [];		
     $scope.users = [];
     $scope.user = {};
     $scope.editLook = {};
@@ -17,7 +19,7 @@
 
     var alertSuccess = $alert({
       title: 'Saved ',
-      content: 'Look has been edited',
+      content: 'Item has been added',
       placement: 'top-right',
       container: '#alertContainer',
       type: 'success',
@@ -42,7 +44,7 @@
       myModal.$promise.then(myModal.show);
     }
 
-    donatorAPI.getAllUsers()
+    donorAPI.getAllUsers()
       .then(function(data) {
         $scope.users = data.data;
       })
@@ -101,22 +103,36 @@
         });
     }
 
-    $scope.deleteLook = function(look) {
-      looksAPI.deleteLook(look)
-        .then(function(data) {
-          var index = $scope.looks.indexOf(look);
-          $scope.editLook.description = '';
-          $scope.editLook.title = '';
-          $scope.deleteBtn = false;
+    $scope.deleteItem = function(item) {
+          var index = $scope.lists.indexOf(item);
           alertSuccess.show();
-          $scope.looks.splice(index, 1);
-          console.log('success, look deleted');
-        })
-        .catch(function(err) {
-          alertFail.show();
-          console.log('failed to delete look' + err);
-        });
+          $scope.lists.splice(index, 1);
+          console.log('success, item deleted');
     }
-
+	
+	  $scope.addItem = function() {console.log("$scope",$scope);
+		  //$scope=item
+      // looksAPI.getUpdateLook(look)
+        // .then(function(data) {
+          // console.log(data);
+          // $scope.editLook = data.data;
+        // })
+        // .catch(function(err) {
+          // console.log('failed to edit look ' + err);
+        // });
+    }
+    $scope.pushItem = function(item){
+		console.log("item *****",item);
+		console.log("$scope",$scope);
+		$scope.item=item;
+		var currentIndex = $scope.lists.length + 1;
+		console.log("****",currentIndex);
+		console.log("$scope",$scope);
+		 $scope.lists.push({"id":currentIndex,"name" :  $scope.item.name, "detail": $scope.item.detail,"quantity": $scope.item.quantity});
+		 $scope.item.name = '';
+          $scope.item.detail = '';
+		  $scope.item.quantity='';
+		  alertSuccess.show();
+	}
   }
 })();
