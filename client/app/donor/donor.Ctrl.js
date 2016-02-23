@@ -147,7 +147,7 @@
 		  alertSuccess.show();
 	}
 	$scope.searchReceivers= function(){
-		//console.log($scope);
+		console.log($scope);
 		alertProgress.show();
 	}
   }
