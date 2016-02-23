@@ -9,22 +9,19 @@
 
     <div class="modal-body" ng-show="content">
       <div class="edit-look-title">
-       <h2>Filter Receivers</h2>
+       <h2>Filter Receivers Search</h2>
       </div>
 
       <div class="form-group">
-        <label for="title">Title</label>
-          <input type="text"
+	  <label for="receiversFilterType">Filter Type</label>
+        		 <button type="button" class="btn btn-default" ng-model="receiversFilterType" data-html="1" data-multiple="1" data-animation="am-flip-x" bs-options="itemFilter.value as itemFilter.label for itemFilter in itemFilters" bs-select>
+  Action <span class="caret"></span>
+</button>
+</br>
+		 <label for="description">Distance</label>
+		   <input type="number"
                   class="form-control title-input"
-                  ng-model="list.name" /></br>
-		 <label for="description">Description</label>
-		   <input type="text"
-                  class="form-control title-input"
-                  ng-model="list.detail" /></br>
-		 <label for="quantity">Quantity</label>
-		   <input type="text"
-                  class="form-control title-input"
-                  ng-model="list.quantity" /></br>				  
+                  ng-model="receiverDistance" /></br>			  
       </div>
 <!-- 
       <div class="form-group">

@@ -13,10 +13,14 @@
       </div>
 
       <div class="form-group">
-        <label for="title">Title</label>
-          <input type="text"
-                  class="form-control title-input"
-                  ng-model="list.name" /></br>
+<label>Food Type:&nbsp;</label>
+<button type="button" class="btn btn-default" ng-model="list.donorsFilterType" data-html="1" bs-options="itemFilter.value as itemFilter.label for itemFilter in itemFilters" bs-select>
+  Action <span class="caret"></span>
+</button>
+	  <label for="donorsDietType">Type of Diet</label>
+        		 <button type="button" class="btn btn-default" ng-model="list.donorsDietType" data-html="1" data-multiple="1" data-animation="am-flip-x" bs-options="itemDiet.value as itemDiet.label for itemDiet in itemDiets" bs-select>
+  Action <span class="caret"></span>
+</button></br>
 		 <label for="description">Description</label>
 		   <input type="text"
                   class="form-control title-input"

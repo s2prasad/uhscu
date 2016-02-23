@@ -14,7 +14,7 @@
             <div class="list-group">
                 <ul>
                     <li class="list-group-item" ng-repeat="list in lists">
-                        <p>Item Name: {{ list.name }}</br> Description: {{ list.detail }}</br> Quantity: {{ list.quantity}}</br>
+                        <p>Food Type: {{ list.donorsFilterType }}</br>Diet Type: {{ list.donorsDietType }}</br> Description: {{ list.detail }}</br> Quantity: {{ list.quantity}}</br>
                             <button ng-click="deleteItem(list)" class="btn btn-sm btn-warning" data-title="DELETE Item  -  Cannot be Undone" bs-tooltip>DELETE</button>
                         </p>
                     </li>

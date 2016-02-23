@@ -15,8 +15,13 @@
     $scope.users = [];
     $scope.user = {};
     $scope.editLook = {};
+	$scope.receiversFilterType = [];
+	$scope.donorsFilterType =[];
+	$scope.donorsDietType=[];
     $scope.deleteBtn = true;
-
+	$scope.itemFilters= [{"value":"precooked","label":"Precooked"},{"value":"readyToServe","label":"Ready to Serve"},{"value":"raw","label":"Raw"},{"value":"frozen","label":"Frozen"},{"value":"reheat","label":"Reheat"}];
+	$scope.itemDiets= [{"value":"Protein","label":"Protein"},{"value":"Vegetable","label":"Vegetable"},{"value":"Dairy","label":"Dairy"}];
+	
     var alertSuccess = $alert({
       title: 'Saved ',
       content: 'Item has been added',
@@ -128,11 +133,13 @@
 		var currentIndex = $scope.lists.length + 1;
 		console.log("****",currentIndex);
 		console.log("$scope",$scope);
-		 $scope.lists.push({"id":currentIndex,"name" :  $scope.item.name, "detail": $scope.item.detail,"quantity": $scope.item.quantity});
-		 $scope.item.name = '';
+		 $scope.lists.push({"id":currentIndex,"donorsFilterType" :  $scope.item.donorsFilterType,"donorsDietType" :  $scope.item.donorsDietType, "detail": $scope.item.detail,"quantity": $scope.item.quantity});
           $scope.item.detail = '';
 		  $scope.item.quantity='';
 		  alertSuccess.show();
+	}
+	$scope.searchReceivers= function(item){
+		console.log($scope);
 	}
   }
 })();
