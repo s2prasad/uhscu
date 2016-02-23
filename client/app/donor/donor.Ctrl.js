@@ -30,6 +30,14 @@
       type: 'success',
       duration: 8
     });
+	var alertProgress = $alert({
+      title: 'Progress',
+      content: 'This feature under development',
+      placement: 'top-right',
+      container: '#alertContainer2',
+      type: 'warning',
+      duration: 15
+    });
 
     var alertFail = $alert({
       title: 'Not Saved ',
@@ -138,8 +146,9 @@
 		  $scope.item.quantity='';
 		  alertSuccess.show();
 	}
-	$scope.searchReceivers= function(item){
-		console.log($scope);
+	$scope.searchReceivers= function(){
+		//console.log($scope);
+		alertProgress.show();
 	}
   }
 })();
