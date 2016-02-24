@@ -146,7 +146,7 @@
 		  $scope.item.quantity='';
 		  alertSuccess.show();
 	}
-	$scope.searchReceivers= function(){
+	donorAPI.searchReceivers= function(){
 		console.log($scope);
 		alertProgress.show();
 	}

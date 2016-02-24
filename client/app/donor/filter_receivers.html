@@ -19,7 +19,7 @@
   Action <span class="caret"></span>
 </button>
 </br>
-		 <label for="description">Distance</label>
+		 <label for="distance">Distance</label>
 		   <input type="number"
                   class="form-control title-input"
                   ng-model="receiverDistance" /></br>		
@@ -53,7 +53,7 @@
                     ng-click="$hide()">Close</button>
         <button type="button"
           class="btn btn-primary btn-md pull-left"
-          ng-click="searchReceivers()">Search Receivers</button>
+          ng-click="adminAPI.getReceivers()">Search Receivers</button>
       </div>
     </div>
   </div>

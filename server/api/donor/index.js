@@ -8,6 +8,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/', auth.hasRole('donor'), controller.index);
+router.post('/getReceivers', auth.isAuthenticated(), controller.searchReceivers);
 //router.get('/me', auth.isAuthenticated(), controller.me);
 //router.get('/:id', auth.isAuthenticated(), controller.show);
 //

@@ -15,14 +15,14 @@
             </div>
         </div> -->
 
-        <div class="col-md-8">
+        <div class="col-md-12">
 <table st-safe-src="users" st-table="displayCollection" class="table table-striped">
     <thead>
         <tr>
-            <th st-sort="name">first name</th>
-            <th st-sort="email">last name</th>
-            <th st-sort="provider">strict search</th>
-            <th st-sort="role">strict select</th>
+            <th st-sort="name">Name</th>
+            <th st-sort="email">Email</th>
+            <th st-sort="address">Address</th>
+            <th st-sort="role">Role</th>
 			<th st-sort="role">Ein</th>
         </tr>
         <tr>
@@ -33,7 +33,7 @@
                 <input st-search="email" placeholder="search for email" class="input-sm form-control" type="search"/>
             </th>
             <th>
-                <input st-search="provider" placeholder="search for equal match" class="input-sm form-control" type="search"/>
+                <input st-search="address" placeholder="search for address" class="input form-control" type="search"/>
             </th>
             <th>
                 <select st-search="role">
@@ -47,7 +47,7 @@
         <tr ng-repeat="row in displayCollection">
             <td>{{row.name | uppercase}}</td>
             <td>{{row.email | lowercase}}</td>
-            <td>{{row.provider}}</td>
+            <td>{{row.address}}</td>
             <td>{{row.role}}</td>
 			<td>{{row.ein}}</td>
             <td><button ng-click="deleteUser(row)" class="btn btn-sm btn-warning" data-title="DELETE User  -  Cannot be Undone" bs-tooltip>DELETE</button></td>		
