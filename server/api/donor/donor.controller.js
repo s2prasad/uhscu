@@ -1,6 +1,6 @@
 'use strict';
 
-var User = require('./donor.model');
+var User = require('../user/user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -122,10 +122,10 @@ exports.me = function(req, res, next) {
 
 
 exports.searchReceivers = function(req, res, next) {
-  var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+ var filters=req.body.filters; console.log(filters);
+ if(filters!={} && filters.receiverDistance!=undefined)
+  User.find({"receiverInfo.receiverDryGroceries":10}, function(err, user) { // don't ever give out the password or salt
+  console.log("inside",user)
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);

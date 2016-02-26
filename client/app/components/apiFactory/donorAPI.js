@@ -12,7 +12,8 @@
     return {
       getAllUsers: getAllUsers,
       getOneUser: getOneUser,
-      deleteUser: deleteUser
+      deleteUser: deleteUser,
+	  getReceivers:getReceivers,
     }
 
     function getAllUsers() {
@@ -31,6 +32,14 @@
       var url = '/api/users/' + user._id;
       return $http.delete(url);
     }
-
+	
+    function getReceivers(item) {
+		console.log("inside api factory",item);
+      var url = '/api/donor/getReceivers';
+      return $http.post(url, {
+		filters:item,
+        cache: true
+      });
+    }
   }
 })();

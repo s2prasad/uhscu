@@ -21,14 +21,26 @@
                 </ul>
             </div>
         </div>
-<div class="row">
+<!-- 	</div>
+<div class="row"> -->
           <button class="btn btn-danger"
              ng-click="getReceivers(this.user)"
              data-template-url="app/donor/filter_receivers.html"
              data-animation="am-fade-and-scale"
              bs-modal="showModal">Find Receivers
           </button><br></br><br></br>
-	</div>		
+              <div class="col-md-6">
+            <div class="list-group">
+                <ul>
+                    <li class="list-group-item" ng-repeat="receiver in closestReceivers">
+                        <p>Email: {{receiver.email}}</br>Ein : {{ receiver.ein }}</br> Address: {{ receiver.address }}</br>
+<!--                             <button ng-click="deleteItem(list)" class="btn btn-sm btn-warning" data-title="DELETE Item  -  Cannot be Undone" bs-tooltip>DELETE</button> -->
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>		  
+</div>		
   <!--
         <div class="col-md-8">
             <table st-table="users" class="table table-striped">

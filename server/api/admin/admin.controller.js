@@ -130,7 +130,6 @@ request(options, function (error, response, body) {
 });
 };
 
-
 /**
  * Authentication callback
  */

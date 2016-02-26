@@ -13,14 +13,20 @@ var DonorSchema = new Schema({
   },
   role: String,
   hashedPassword: String,
-  ein:String,
-  provider: String,
+  ein:{ type: String, default: '0' },
+  provider: String,//remove
+  rssUrls: Array,//remove
   salt: String,
   status:String,
-  facebook: {},
-  twitter: {},
-  github: {},
-  rssUrls: Array
+  address:String,
+  location:Object,
+  registeredDate:String,
+  companyInfo:Object,
+  foodRecoveryInfo:Object,
+  donorInfo:Object,
+  receiverInfo:Object,
+  transporterInfo:Object,
+  vehicleInfo:Object
 });
 
 /**

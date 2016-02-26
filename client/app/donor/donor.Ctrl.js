@@ -11,11 +11,11 @@
 
 	$scope.lists = [];
 	$scope.item={};
+	$scope.closestReceivers={};
     $scope.looks = [];		
     $scope.users = [];
     $scope.user = {};
     $scope.editLook = {};
-	$scope.receiversFilterType = [];
 	$scope.donorsFilterType =[];
 	$scope.donorsDietType=[];
     $scope.deleteBtn = true;
@@ -76,7 +76,7 @@
       })
 
     $scope.deleteUser = function(user) {
-      donatorAPI.deleteUser(user)
+      donorAPI.deleteUser(user)
         .then(function(data) {
           console.log('deleted user');
           var index = $scope.users.indexOf(user);
@@ -146,9 +146,15 @@
 		  $scope.item.quantity='';
 		  alertSuccess.show();
 	}
-	donorAPI.searchReceivers= function(){
-		console.log($scope);
-		alertProgress.show();
+	$scope.getReceivers= function(filters){ console.log("***here",$scope);
+		//filters={"distance":$scope.receiverDistance,"filterType":$scope.receiversFilterType};
+		donorAPI.getReceivers(filters)
+		.then(function(data) {
+			console.log("frontend",data);
+			$scope.closestReceivers=data.data;
+			alertProgress.show();
+		});
+		
 	}
   }
 })();
