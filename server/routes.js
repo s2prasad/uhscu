@@ -34,7 +34,8 @@ module.exports = function(app) {
   app.use('/api/admin', require('./api/admin'));
   app.use('/api/donor', require('./api/donor'));
   app.use('/api/receiver', require('./api/receiver'));
-  app.use('/api/transporter', require('./api/transporter'));  
+  app.use('/api/transporter', require('./api/transporter'));
+  app.post('/receivesms', require('./api/sms'));
   app.use('/auth', require('./auth'));
   app.post('/forgotpassword', require('./forgotpassword').reset);
 

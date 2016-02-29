@@ -3,7 +3,9 @@
 var User = require('../user/user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
+var smsConfig=require('../../../config.js');
 var jwt = require('jsonwebtoken');
+var sms=require('../sms/sms.controller.js');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -122,18 +124,32 @@ exports.me = function(req, res, next) {
 
 
 exports.searchReceivers = function(req, res, next) {
- var filters=req.body.filters; console.log(filters);
+ var filters=req.body.filters;  console.log(req.body.location);
  if(filters!={} && filters.receiverDistance!=undefined)
   User.find({"receiverInfo.receiverDryGroceries":10}, function(err, user) { // don't ever give out the password or salt
-  console.log("inside",user)
+  //console.log("inside",user);
     if (err) return next(err);
-    if (!user) return res.json(401);
-    res.json(user);
+    if (!user) {
+        return res.json(401);
+    }
+    {   console.log("its inside !user");
+        sendReceivers(user,function(result){console.log(result)});
+        res.json(user);
+    }
   });
 };
 /**
  * Authentication callback
  */
+
+var sendReceivers= exports.sendReceivers=function(user,callback){
+    console.log("itshere",user);
+    sms.sendSMS('broadcast-olkh12','+14083342547',"hello there23",function(result){
+        callback(result)
+    });
+}
+
+
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };
