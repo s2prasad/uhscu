@@ -14,6 +14,7 @@
       getOneUser: getOneUser,
       deleteUser: deleteUser,
 	  getReceivers:getReceivers,
+      saveItems:saveItems
     }
 
     function getAllUsers() {
@@ -34,10 +35,18 @@
     }
 	
     function getReceivers(item) {
-		console.log("inside api factory",item);
+		console.log("inside getreceivers api factory",item);
       var url = '/api/donor/getReceivers';
       return $http.post(url, {
 		filters:item,
+        cache: true
+      });
+    }
+    function saveItems(items) {
+      console.log("inside saveitems api factory",items);
+      var url = '/api/donor/saveItems';
+      return $http.post(url, {
+        items:items,
         cache: true
       });
     }

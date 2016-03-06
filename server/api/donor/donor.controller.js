@@ -1,6 +1,7 @@
 'use strict';
-
+var mongoose=require('mongoose')
 var User = require('../user/user.model');
+var Transaction = require('../user/transaction.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var smsConfig=require('../../../config.js');
@@ -124,20 +125,60 @@ exports.me = function(req, res, next) {
 
 
 exports.searchReceivers = function(req, res, next) {
- var filters=req.body.filters;  console.log(req.body.location);
+ var filters=req.body.filters; console.log("details******->",req.user);
+ var location=req.user.location;console.log("filters...",filters);
  if(filters!={} && filters.receiverDistance!=undefined)
-  User.find({"receiverInfo.receiverDryGroceries":10}, function(err, user) { // don't ever give out the password or salt
-  //console.log("inside",user);
-    if (err) return next(err);
-    if (!user) {
-        return res.json(401);
+     //User.geoNear([parseFloat(location.lng), parseFloat(location.lat)], { distance: parseFloat(filters.receiverDistance)/ 3963.192}, function (err, result){
+     //   console.log("geo:::",result);
+     //});
+    var point = { type : "Point", coordinates : [location[0],location[1]] };console.log("***point",point);
+    //User.geoNear([location[0],location[1]], { maxDistance : 50, spherical : false }, function(err, results, stats) {
+    //    console.log("inside geo->",results);
+    //    console.log("inside geoerr ->",err);
+    //    console.log("inside geo stats ->",stats);
+    //});
+    {
+        User.aggregate().near(
+            {    near: [ location[1] , location[0] ] ,
+                spherical: true,//filters.receiverDistance
+                distanceField:'location',
+                distanceMultiplier:3959,
+                maxDistance:filters.receiverDistance/3959,
+                query: { status: 'inactive',"receiverInfo.receiverPerishableItem":'yes',
+                    "receiverInfo.receiverRefrigeratedItem":'yes'}
+            })
+            .exec(function(err,docs) {
+                if (err) console.log(err);
+                else {
+                    console.log(docs)
+                    res.json(docs);
+                }
+            });
     }
-    {   console.log("its inside !user");
-        sendReceivers(user,function(result){console.log(result)});
-        res.json(user);
-    }
-  });
+
+
+  //User.find({"receiverInfo.receiverDryGroceries":10}, function(err, user) { // don't ever give out the password or salt
+  ////console.log("inside",user);
+  //  if (err) return next(err);
+  //  if (!user) {
+  //      return res.json(401);
+  //  }
+  //  {   console.log("its inside !user",user[0].location);
+  //      //sendReceivers(user,function(result){console.log(result)});
+  //      res.json(user);
+  //  }
+  //});
 };
+/**
+ *
+ */
+exports.storeItems=function(req, res, next){
+    var itemsList=req.body.items;
+
+    console.log("**inside save items",req.body.items);
+
+};
+
 /**
  * Authentication callback
  */
@@ -153,3 +194,7 @@ var sendReceivers= exports.sendReceivers=function(user,callback){
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };
+
+exports.test=function(){
+    console.log("hewrwerwer")
+}

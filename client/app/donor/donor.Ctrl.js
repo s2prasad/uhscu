@@ -5,18 +5,15 @@
     .module('app')
     .controller('DonorCtrl', DonorCtrl);
 
-  DonorCtrl.$inject = ['$scope', 'Auth', '$modal', 'donorAPI', '$alert', 'looksAPI'];
+  DonorCtrl.$inject = ['$scope', 'Auth', '$modal', 'donorAPI', '$alert'];
 
-  function DonorCtrl($scope, Auth, $modal, donorAPI, $alert, looksAPI) {
+  function DonorCtrl($scope, Auth, $modal, donorAPI, $alert) {
 
 	$scope.lists = [];
 	$scope.item={};
-	$scope.closestReceivers={};
-    $scope.looks = [];		
-    $scope.users = [];
-    $scope.user = {};
-    $scope.editLook = {};
-	$scope.donorsFilterType =[];
+	$scope.closestReceivers=[];
+    $scope.receiversFilters = {};
+	$scope.donorsFoodType =[];
 	$scope.donorsDietType=[];
     $scope.deleteBtn = true;
 	$scope.itemFilters= [{"value":"precooked","label":"Precooked"},{"value":"readyToServe","label":"Ready to Serve"},{"value":"raw","label":"Raw"},{"value":"frozen","label":"Frozen"},{"value":"reheat","label":"Reheat"}];
@@ -57,65 +54,6 @@
       myModal.$promise.then(myModal.show);
     }
 
-    donorAPI.getAllUsers()
-      .then(function(data) {
-        $scope.users = data.data;
-      })
-      .catch(function(err) {
-        console.log('error getting users');
-        console.log(err);
-      });
-
-    looksAPI.getAllLooks()
-      .then(function(data) {
-        console.log(data);
-        $scope.looks = data.data;
-      })
-      .catch(function(err) {
-        console.log('failed to get all looks');
-      })
-
-    $scope.deleteUser = function(user) {
-      donorAPI.deleteUser(user)
-        .then(function(data) {
-          console.log('deleted user');
-          var index = $scope.users.indexOf(user);
-          $scope.users.splice(index, 1);
-        })
-        .catch(function(err) {
-          console.log('failed to delete user');
-          console.log(err);
-        });
-    }
-
-    $scope.editLook = function(look) {
-      looksAPI.getUpdateLook(look)
-        .then(function(data) {
-          console.log(data);
-          $scope.editLook = data.data;
-        })
-        .catch(function(err) {
-          console.log('failed to edit look ' + err);
-        });
-    }
-
-    $scope.saveLook = function() {
-      var look = $scope.editLook;
-
-      looksAPI.updateLook(look)
-        .then(function(data) {
-          console.log('Look updated');
-          console.log(data);
-          $scope.editLook.title = '';
-          $scope.editLook.description = '';
-          alertSuccess.show();
-        })
-        .catch(function(err) {
-          console.log('failed to update' + err);
-          alertFail.show();
-        });
-    }
-
     $scope.deleteItem = function(item) {
           var index = $scope.lists.indexOf(item);
           alertSuccess.show();
@@ -123,7 +61,16 @@
           console.log('success, item deleted');
     }
 	
-	  $scope.addItem = function() {console.log("$scope",$scope);
+	  $scope.submitItems = function() {
+          console.log("inside submit items",$scope);
+          var items={};
+          items.receivers=$scope.closestReceivers;
+          items.list=$scope.lists;
+          items.filters=$scope.receiversFilters;
+          donorAPI.saveItems(items)
+              .then(function(data) {
+                  console.log(data);
+              });
 		  //$scope=item
       // looksAPI.getUpdateLook(look)
         // .then(function(data) {
@@ -141,17 +88,20 @@
 		var currentIndex = $scope.lists.length + 1;
 		console.log("****",currentIndex);
 		console.log("$scope",$scope);
-		 $scope.lists.push({"id":currentIndex,"donorsFilterType" :  $scope.item.donorsFilterType,"donorsDietType" :  $scope.item.donorsDietType, "detail": $scope.item.detail,"quantity": $scope.item.quantity});
+		 $scope.lists.push({"id":currentIndex,"donorsFoodType" :  $scope.item.donorsFoodType,
+             "donorsDietType" :  $scope.item.donorsDietType, "detail": $scope.item.detail,
+             "quantity": $scope.item.quantity});
           $scope.item.detail = '';
 		  $scope.item.quantity='';
 		  alertSuccess.show();
 	}
-	$scope.getReceivers= function(filters){ console.log("***here",$scope);
-		//filters={"distance":$scope.receiverDistance,"filterType":$scope.receiversFilterType};
+	$scope.getReceivers= function(filters){ console.log("***here",$scope);console.log("filters",filters);
+        $scope.receiversFilters=filters;
 		donorAPI.getReceivers(filters)
 		.then(function(data) {
 			console.log("frontend",data);
 			$scope.closestReceivers=data.data;
+            console.log("frontend",$scope.closestReceivers);
 			alertProgress.show();
 		});
 		

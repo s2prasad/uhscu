@@ -28,7 +28,12 @@ exports.index = function(req, res) {
 exports.create = function (req, res, next) {
   var item=req.body;
   var address= item.location.formatted_address;
-  var location=item.location.geometry;
+    var location={}; var loc=[];
+   location.latitude=parseFloat(item.location.geometry.location.lat);
+    location.longitude=parseFloat(item.location.geometry.location.lng);
+   loc.push(location.latitude);
+    loc.push(location.longitude);
+    console.log(location); console.log("loc",loc);
   item=_.omit(item,'location');
   var userObj={};
 	var receiverObj={},donorObj={},transporterObj={},companyObj={},foodRecoveryObj={},vehicleObj={};
@@ -62,7 +67,7 @@ exports.create = function (req, res, next) {
   newUser.password=item.password;
   newUser.role=item.role;
   newUser.address=address;
-  newUser.location=location;
+  newUser.location=loc;
   newUser.status = 'inactive';//console.log("here1 ",newUser);
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);

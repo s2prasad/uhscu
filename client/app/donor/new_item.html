@@ -2,9 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header" ng-show="title">
-        <button type="button"
-                    class="close"
-                    ng-click="$hide()">&times;</button>
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
       </div>
 
     <div class="modal-body" ng-show="content">
@@ -13,22 +11,16 @@
       </div>
 
       <div class="form-group">
-<label>Food Type:&nbsp;</label>
-<button type="button" class="btn btn-default" ng-model="list.donorsFilterType" data-html="1" bs-options="itemFilter.value as itemFilter.label for itemFilter in itemFilters" bs-select>
-  Action <span class="caret"></span>
-</button>
-	  <label for="donorsDietType">Type of Diet</label>
-        		 <button type="button" class="btn btn-default" ng-model="list.donorsDietType" data-html="1" data-multiple="1" data-animation="am-flip-x" bs-options="itemDiet.value as itemDiet.label for itemDiet in itemDiets" bs-select>
-  Action <span class="caret"></span>
-</button></br>
-		 <label for="description">Description</label>
-		   <input type="text"
-                  class="form-control title-input"
-                  ng-model="list.detail" /></br>
-		 <label for="quantity">Quantity</label>
-		   <input type="text"
-                  class="form-control title-input"
-                  ng-model="list.quantity" /></br>				  
+<label>Food Type &nbsp;</label>
+<button type="button" class="btn btn-default" ng-model="list.donorsFoodType" data-html="1" bs-options="itemFilter.value as itemFilter.label for itemFilter in itemFilters" bs-select>
+  Action <span class="caret"></span></button></br>
+	  <label>Type of Diet</label>
+      <button type="button" class="btn btn-default" ng-model="list.donorsDietType" data-html="1" data-multiple="1" data-animation="am-flip-x" bs-options="itemDiet.value as itemDiet.label for itemDiet in itemDiets" bs-select>
+  Action <span class="caret"></span></button></br>
+     <label>Description</label>
+       <input type="text" class="form-control title-input" ng-model="list.detail" /></br>
+     <label>Quantity    &nbsp;&nbsp;&nbsp;&nbsp;</label>
+       <input type="text" class="form-control title-input" ng-model="list.quantity" /></br>
       </div>
 <!-- 
       <div class="form-group">

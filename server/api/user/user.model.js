@@ -19,7 +19,8 @@ var UserSchema = new Schema({
   salt: String,
   status:String,
   address:String,
-  location:Object,
+  location:{type: [Number],  // [<longitude>, <latitude>]
+      index: '2d' },
   registeredDate:String,
   companyInfo:Object,
   foodRecoveryInfo:Object,
@@ -50,7 +51,6 @@ UserSchema
     return {
       'name': this.name,
       'role': this.role,
-        'ein':this.ein,
     };
   });
 

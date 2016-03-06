@@ -2,9 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header" ng-show="title">
-        <button type="button"
-                    class="close"
-                    ng-click="$hide()">&times;</button>
+        <button type="button" class="close" ng-click="$hide()">&times;</button>
       </div>
 
     <div class="modal-body" ng-show="content">
@@ -14,16 +12,11 @@
       </div>
 
       <div class="form-group">
-	  <label for="receiversFilterType">Filter Type</label>
-        		 <button type="button" class="btn btn-default" ng-model="filter.receiversFilterType" data-html="1" data-multiple="1" data-animation="am-flip-x" bs-options="itemFilter.value as itemFilter.label for itemFilter in itemFilters" bs-select>
-  Action <span class="caret"></span>
-</button>
-</br>
-		 <label for="distance">Distance</label>
-		   <input type="number"
-                  class="form-control title-input"
-                  ng-model="filter.receiverDistance" /></br>		
-<div class="col-md-6" id="alertContainer2"></div>				  
+	  <label>Filter Type</label>
+       <button type="button" class="btn btn-default" ng-model="filter.receiversFilterType" data-html="1" data-multiple="1" data-animation="am-flip-x" bs-options="itemFilter.value as itemFilter.label for itemFilter in itemFilters" bs-select>Action <span class="caret"></span></button></br>
+       <label>Distance    &nbsp;&nbsp;</label>
+       <input type="number" class="form-control title-input" ng-model="filter.receiverDistance" /></br>
+        <div class="col-md-6" id="alertContainer2"></div>
       </div>
 <!-- 
       <div class="form-group">
@@ -48,12 +41,8 @@
         
         </div>
       <div class="modal-footer">
-        <button type="button"
-                    class="btn btn-default pull-left"
-                    ng-click="$hide()">Close</button>
-        <button type="button"
-          class="btn btn-primary btn-md pull-left"
-          ng-click="getReceivers(filter)">Search Receivers</button>
+        <button type="button" class="btn btn-default pull-left" ng-click="$hide()">Close</button>
+        <button type="button" class="btn btn-primary btn-md pull-left" ng-click="getReceivers(this.filter)">Search Receivers</button>
       </div>
     </div>
   </div>
