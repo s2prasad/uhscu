@@ -13,7 +13,7 @@
             <div class="list-group">
                 <ul>
                     <li class="list-group-item" ng-repeat="list in lists">
-                        <p>Food Type: {{list.donorsFilterType}}</br>Diet Type: {{ list.donorsDietType }}</br> Description: {{ list.detail }}</br> Quantity: {{ list.quantity}}</br>
+                        <p>Food Type: {{list.donorsFoodType}}</br>Diet Type: {{ list.donorsDietType }}</br> Description: {{ list.detail }}</br> Quantity: {{ list.quantity}}</br>
                             <button ng-click="deleteItem(list)" class="btn btn-sm btn-warning" data-title="DELETE Item  -  Cannot be Undone" bs-tooltip>DELETE</button>
                         </p>
                     </li>
@@ -39,7 +39,9 @@
             </div>
         </div>
        <button class="btn btn-primary"
-               ng-click="submitItems(this)">Submit
+               data-template-url="app/donor/submit_transaction.html"
+               data-animation="am-fade-and-scale"
+               bs-modal="showModal">Send all
        </button><br> </br> <br> </br>
 </div>		
   <!--

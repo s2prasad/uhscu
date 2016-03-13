@@ -13,6 +13,7 @@
 	$scope.item={};
 	$scope.closestReceivers=[];
     $scope.receiversFilters = {};
+    $scope.transaction = {};
 	$scope.donorsFoodType =[];
 	$scope.donorsDietType=[];
     $scope.deleteBtn = true;
@@ -65,8 +66,10 @@
           console.log("inside submit items",$scope);
           var items={};
           items.receivers=$scope.closestReceivers;
-          items.list=$scope.lists;
-          items.filters=$scope.receiversFilters;
+          items.itemDescription=$scope.lists;
+          items.filterForReceiver=$scope.receiversFilters;console.log("***$scope.transaction.phone",$scope.transaction.phone);
+          items.transaction=$scope.transaction;
+          //items.transactionName=$scope.transaction.name;
           donorAPI.saveItems(items)
               .then(function(data) {
                   console.log(data);
@@ -80,7 +83,8 @@
         // .catch(function(err) {
           // console.log('failed to edit look ' + err);
         // });
-    }
+    };
+
     $scope.pushItem = function(item){
 		console.log("item *****",item);
 		console.log("$scope",$scope);

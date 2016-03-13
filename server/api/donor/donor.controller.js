@@ -1,5 +1,7 @@
 'use strict';
-var mongoose=require('mongoose')
+var mongoose=require('mongoose');
+var moment=require('moment-timezone');
+var uniqueId=require("smart-id");
 var User = require('../user/user.model');
 var Transaction = require('../user/transaction.model');
 var passport = require('passport');
@@ -127,74 +129,87 @@ exports.me = function(req, res, next) {
 exports.searchReceivers = function(req, res, next) {
  var filters=req.body.filters; console.log("details******->",req.user);
  var location=req.user.location;console.log("filters...",filters);
- if(filters!={} && filters.receiverDistance!=undefined)
-     //User.geoNear([parseFloat(location.lng), parseFloat(location.lat)], { distance: parseFloat(filters.receiverDistance)/ 3963.192}, function (err, result){
-     //   console.log("geo:::",result);
-     //});
-    var point = { type : "Point", coordinates : [location[0],location[1]] };console.log("***point",point);
-    //User.geoNear([location[0],location[1]], { maxDistance : 50, spherical : false }, function(err, results, stats) {
-    //    console.log("inside geo->",results);
-    //    console.log("inside geoerr ->",err);
-    //    console.log("inside geo stats ->",stats);
-    //});
-    {
-        User.aggregate().near(
-            {    near: [ location[1] , location[0] ] ,
-                spherical: true,//filters.receiverDistance
-                distanceField:'location',
-                distanceMultiplier:3959,
-                maxDistance:filters.receiverDistance/3959,
-                query: { status: 'inactive',"receiverInfo.receiverPerishableItem":'yes',
-                    "receiverInfo.receiverRefrigeratedItem":'yes'}
-            })
-            .exec(function(err,docs) {
-                if (err) console.log(err);
-                else {
-                    console.log(docs)
-                    res.json(docs);
-                }
-            });
-    }
+ if(filters!={} && filters.receiverDistance!=undefined) {
+     User.aggregate().near(
+         {
+             near: [location[1], location[0]],
+             spherical: true,//filters.receiverDistance
+             distanceField: 'location',
+             distanceMultiplier: 3959,
+             maxDistance: filters.receiverDistance / 3959,
+             query: {
+                 status: 'inactive', "receiverInfo.receiverPerishableItem": 'yes',
+                 "receiverInfo.receiverRefrigeratedItem": 'yes'
+             }
+         })
+         .exec(function (err, docs) {
+             if (err) console.log(err);
+             else {
+                 console.log(docs)
+                 res.json(docs);
+             }
+         });
 
-
-  //User.find({"receiverInfo.receiverDryGroceries":10}, function(err, user) { // don't ever give out the password or salt
-  ////console.log("inside",user);
-  //  if (err) return next(err);
-  //  if (!user) {
-  //      return res.json(401);
-  //  }
-  //  {   console.log("its inside !user",user[0].location);
-  //      //sendReceivers(user,function(result){console.log(result)});
-  //      res.json(user);
-  //  }
-  //});
+ }
 };
 /**
  *
  */
 exports.storeItems=function(req, res, next){
-    var itemsList=req.body.items;
-
-    console.log("**inside save items",req.body.items);
-
+    var donor=req.user;
+    var receiversArray=[];
+    var itemDetails=[];
+    var itemsList=req.body.items; console.log("itemsList",itemsList);console.log("req.user",req.user);
+    var receivers=itemsList.receivers;
+    var code=uniqueId.make('a0s',4);
+    var count=1;
+    for(var item of itemsList.itemDescription){
+        itemDetails.push(count+") Description:"+item.detail+"-Quantity:"+item.quantity);
+        count++;
+    }
+    for(var receiver of receivers ){
+        receiversArray.push({"contactName":receiver.foodRecoveryInfo.foodRecoveryContactName,
+            "phone":receiver.foodRecoveryInfo.foodRecoveryContactPhone,
+            "receiverId":receiver._id});console.log(receiver);
+        var smsBodyReceiver="Food items of type "+itemsList.filterForReceiver.receiversFilterType.join(', ')+" is being donated. To accept this donation please reply this number" +
+                " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ');
+        sendReceivers(code,smsBodyReceiver,receiver.foodRecoveryInfo.foodRecoveryContactPhone,function(result){
+            console.log(result);
+        });
+    }
+    var donorTransactionName=itemsList.transaction.name;
+    var donorTransactionPhone=itemsList.transaction.phone;
+    var smsBodyDonor="Hello "+donorTransactionName+", Successfuly sent sms to receivers, your tranaction in progress. The food types selected were: "
+        +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
+        +".\nYou will receive an sms when someone accepts donation.";
+    sms.sendSMS('broadcast-'+code,'+14083342547',smsBodyDonor,function(result){
+        console.log(result);
+    });
+    var newTransaction = new Transaction();
+    newTransaction.receivers=receiversArray;
+    newTransaction.itemDescription=itemsList.itemDescription;
+    newTransaction.filterForReceiver=itemsList.receiversFilterType;
+    newTransaction.transactionDate=moment().format();
+    newTransaction.transactionId=code+moment().format('MMDDYYYYHHmm');
+    newTransaction.code=code;
+    newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"donorId":donor._id};
+    newTransaction.save(function(err, user) {
+        if(err) return validationError(res, err);
+    })
 };
 
 /**
  * Authentication callback
  */
 
-var sendReceivers= exports.sendReceivers=function(user,callback){
-    console.log("itshere",user);
-    sms.sendSMS('broadcast-olkh12','+14083342547',"hello there23",function(result){
+var sendReceivers= exports.sendReceivers=function(code,text,to,callback){
+   //callback("itshere::",text,to,code);
+    sms.sendSMS('broadcast-'+code,'+14083342547',text,function(result){
         callback(result)
     });
-}
+};
 
 
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };
-
-exports.test=function(){
-    console.log("hewrwerwer")
-}
