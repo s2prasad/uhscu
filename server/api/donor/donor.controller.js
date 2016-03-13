@@ -179,9 +179,9 @@ exports.storeItems=function(req, res, next){
     }
     var donorTransactionName=itemsList.transaction.name;
     var donorTransactionPhone=itemsList.transaction.phone;
-    var smsBodyDonor="Hello "+donorTransactionName+", Successfuly sent sms to receivers, your tranaction in progress. The food types selected were: "
+    var smsBodyDonor="Hello "+donorTransactionName+", Successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
         +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
-        +".\nYou will receive an sms when someone accepts donation.";
+        +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts.Transaction runs";
     sms.sendSMS('broadcast-'+code,'+14083342547',smsBodyDonor,function(result){
         console.log(result);
     });
