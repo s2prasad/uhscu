@@ -11,6 +11,7 @@
 
 	$scope.lists = [];
 	$scope.item={};
+    $scope.transactionId=[];
 	$scope.closestReceivers=[];
     $scope.receiversFilters = {};
     $scope.transaction = {};
@@ -19,7 +20,8 @@
     $scope.deleteBtn = true;
 	$scope.itemFilters= [{"value":"precooked","label":"Precooked"},{"value":"readyToServe","label":"Ready to Serve"},{"value":"raw","label":"Raw"},{"value":"frozen","label":"Frozen"},{"value":"reheat","label":"Reheat"}];
 	$scope.itemDiets= [{"value":"Protein","label":"Protein"},{"value":"Vegetable","label":"Vegetable"},{"value":"Dairy","label":"Dairy"}];
-	
+    $scope.notification=false;
+
     var alertSuccess = $alert({
       title: 'Saved ',
       content: 'Item has been added',
@@ -30,13 +32,20 @@
     });
 	var alertProgress = $alert({
       title: 'Progress',
-      content: 'This feature under development',
+      content: 'All receivers has been fetched, Increase distance to fetch more.',
       placement: 'top-right',
       container: '#alertContainer2',
       type: 'warning',
       duration: 15
     });
-
+    var alertTransactionComplete = $alert({
+      title: 'Transaction Complete',
+      content: 'Your transaction is under progress.You should receive an sms soon.'+$scope.transactionId.join(', '),
+      placement: 'top-middle',
+      container: '#alertContainer3',
+      type: 'warning',
+      duration: 20
+    });
     var alertFail = $alert({
       title: 'Not Saved ',
       content: 'Look has failed to edit',
@@ -72,7 +81,17 @@
           //items.transactionName=$scope.transaction.name;
           donorAPI.saveItems(items)
               .then(function(data) {
-                  console.log(data);
+                  console.log("after sending sms",data);
+                  $scope.lists = [];
+                  $scope.item={};
+                  $scope.closestReceivers=[];
+                  $scope.receiversFilters = {};
+                  $scope.transaction = {};
+                  $scope.donorsFoodType =[];
+                  $scope.donorsDietType=[];
+                  $scope.transactionId.push(data.data.transactionId);console.log("$scope.transactionId",$scope,"data.data",data.data);
+                  $scope.notification=true;
+                  alertTransactionComplete.show();
               });
 		  //$scope=item
       // looksAPI.getUpdateLook(look)

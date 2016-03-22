@@ -126,15 +126,15 @@
 
   function SignupCtrl($scope, Auth, $state, $window,$timeout) {
 	  var vm = this;
-
 	  vm.existingUsers = [
       'john@gmail.com',
       'tyrion@gmail.com',
       'arya@yahoo.com'
     ];
 	
-	      vm.fields = donorfields($timeout,vm);
-	
+	      vm.fields = donorfields($timeout,Auth,vm);
+
+	  vm.emailCheckMsg="initial";
 	console.log("vm",vm);
 	//vm.originalFields = angular.copy(vm.fields);
     $scope.user = {};
@@ -174,9 +174,13 @@
       $window.location.href = '/auth/' + provider;
     };
   }
+
+	function verifyUser($timeout,vm){
+
+	};
+
   
-  
-  function donorfields($timeout,vm){
+  function donorfields($timeout,Auth,vm){
 	  return [
 	  {
 			key: 'role',
@@ -220,16 +224,20 @@
         asyncValidators: {
           uniqueUsername: {
             expression: function($viewValue, $modelValue, scope) {
-              scope.options.templateOptions.loading = true;   
+              scope.options.templateOptions.loading = true;
+				var exist=false;
+                Auth.checkEmail($viewValue, function (responses) {
+                    console.log("Response", responses);
+                    if ($viewValue.trim != '' && $viewValue != null && responses.data.exist != undefined)
+                        exist=true
+                });
               return $timeout(function() {
                 scope.options.templateOptions.loading = false;
-                if ($viewValue!=null && vm.existingUsers.indexOf($viewValue) !== -1) {
-                  throw new Error('registered');
-                }
-              }, 1000); 
+                  if(exist) throw new Error('registered');
+              }, 1000);
             },
-            message: '"Invalid Email or already registered."'
-          }
+			  message: "'Invalid Email or already registered.'"
+		  }
         },
         modelOptions: {
           updateOn: 'blur'

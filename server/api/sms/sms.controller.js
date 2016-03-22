@@ -46,7 +46,7 @@ var receiveSMS=exports.receiveSMS =function(req,res,next){
     newMsg.date=moment().format();
     newMsg.save(function (err) {
         if(err){
-            res.json(401);
+            res.status(401).json(err);
         }
         else next("success");
     });
@@ -55,15 +55,15 @@ var receiveSMS=exports.receiveSMS =function(req,res,next){
 
 var validateSMS= function(message){
     var type="CodeReplyMsg";
-    var smsbody=message.body.toLowerCase().trim();
+    var smsbody=message.body.toUpperCase().trim();
     var phone=message.from;
-    var from=phone.substring((phone.length-10), phone.length);from="9234567899";
+    var from=phone.substring((phone.length-10), phone.length);from="1234567890";
     var isReceiver= User.findOne({"foodRecoveryInfo.foodRecoveryContactPhone":from});
     var isValidCode= Transaction.findOne({code:smsbody});
     var isValidCodeReceiver= Transaction.findOne({code:smsbody,"receivers.phone":from},
         {itemDescription:1,donationStatus:1,code:1,donor:1,transactionDate:1,transactionId:1,'receivers.$':1,'acceptor':1} )
     .populate('receivers.receiverId donor.donorId acceptor.receiverId');//check inprogress or completed  or if same from then resend details.
-    var isCodeExpiredElseUpdate=Transaction.findOne({code:smsbody,donationStatus:'Incomplete',transactionDate:{ $lt:moment().format()},"receivers.phone": "1234567890"},
+    var isCodeExpiredElseUpdate=Transaction.findOne({code:smsbody,donationStatus:'Inprogress',transactionDate:{ $lt:moment().format()},"receivers.phone": "1234567890"},
                                 {itemDescription:1,donationStatus:1,code:1,donor:1,transactionDate:1,transactionId:1,'receivers.$':1,$isolated : 1} )
                                 .populate('receivers.receiverId donor.donorId');
     var isReceiverMsg="You are not a valid receiver";

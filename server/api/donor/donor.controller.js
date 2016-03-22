@@ -1,7 +1,7 @@
 'use strict';
 var mongoose=require('mongoose');
 var moment=require('moment-timezone');
-var uniqueId=require("smart-id");
+var uniqueId=require('shortid32');
 var User = require('../user/user.model');
 var Transaction = require('../user/transaction.model');
 var passport = require('passport');
@@ -161,7 +161,7 @@ exports.storeItems=function(req, res, next){
     var itemDetails=[];
     var itemsList=req.body.items; console.log("itemsList",itemsList);
     var receivers=itemsList.receivers;
-    var code=uniqueId.make('a0s',4);
+    var code=uniqueId.generate();
     var count=1;
     for(var item of itemsList.itemDescription){
         itemDetails.push(count+") Description:"+item.detail+"-Quantity:"+item.quantity);
@@ -173,16 +173,17 @@ exports.storeItems=function(req, res, next){
             "receiverId":receiver._id});console.log(receiver);
         var smsBodyReceiver="Food items of type "+itemsList.filterForReceiver.receiversFilterType.join(', ')+" is being donated. To accept this donation please reply this number" +
                 " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ');
-        sendReceivers(code,smsBodyReceiver,receiver.foodRecoveryInfo.foodRecoveryContactPhone,function(result){
+        var receiverPhone=receiver.foodRecoveryInfo.foodRecoveryContactPhone;receiverPhone="+14084930678";
+        sms.sendSMS('broadcast-'+code,receiverPhone,smsBodyReceiver,function(result){
             console.log(result);
         });
     }
     var donorTransactionName=itemsList.transaction.name;
-    var donorTransactionPhone=itemsList.transaction.phone;
-    var smsBodyDonor="Hello "+donorTransactionName+", Successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
+    var donorTransactionPhone=itemsList.transaction.phone;donorTransactionPhone="+14084930678";
+    var smsBodyDonor="Hello "+donorTransactionName+", successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
         +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
-        +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts.Transaction runs";
-    sms.sendSMS('broadcast-'+code,'+14083342547',smsBodyDonor,function(result){
+        +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts. No receivers are accepted after 24 hours from now and transaction is automatically stopped.";
+    sms.sendSMS('Notification-'+code,donorTransactionPhone,smsBodyDonor,function(result){
         console.log(result);
     });
     var newTransaction = new Transaction();
@@ -194,20 +195,22 @@ exports.storeItems=function(req, res, next){
     newTransaction.code=code;
     newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"donorId":donor._id};
     newTransaction.save(function(err, user) {
-        if(err) return validationError(res, err);
+        if(err) res.status(400).json(newTransaction)
     })
+    res.status(200).json(newTransaction);
 };
 
 /**
  * Authentication callback
  */
 
-var sendReceivers= exports.sendReceivers=function(code,text,to,callback){
-   //callback("itshere::",text,to,code);
-    sms.sendSMS('broadcast-'+code,'+14083342547',text,function(result){
-        callback(result)
-    });
-};
+//var sendReceivers= exports.sendReceivers=function(code,text,to){
+//   //callback("itshere::",text,to,code);
+//    sms.sendSMS('broadcast-'+code,'+14084930678',text,function(result){
+//        console.log(result);
+//        return result
+//    });
+//};
 
 
 exports.authCallback = function(req, res, next) {
