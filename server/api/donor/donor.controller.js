@@ -173,13 +173,13 @@ exports.storeItems=function(req, res, next){
             "receiverId":receiver._id});console.log(receiver);
         var smsBodyReceiver="Food items of type "+itemsList.filterForReceiver.receiversFilterType.join(', ')+" is being donated. To accept this donation please reply this number" +
                 " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ');
-        var receiverPhone=receiver.foodRecoveryInfo.foodRecoveryContactPhone;receiverPhone="+14084930678";
+        var receiverPhone=receiver.foodRecoveryInfo.foodRecoveryContactPhone;
         sms.sendSMS('broadcast-'+code,receiverPhone,smsBodyReceiver,function(result){
             console.log(result);
         });
     }
     var donorTransactionName=itemsList.transaction.name;
-    var donorTransactionPhone=itemsList.transaction.phone;donorTransactionPhone="+14084930678";
+    var donorTransactionPhone=itemsList.transaction.phone;
     var smsBodyDonor="Hello "+donorTransactionName+", successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
         +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
         +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts. No receivers are accepted after 24 hours from now and transaction is automatically stopped.";
