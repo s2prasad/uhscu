@@ -1,9 +1,14 @@
 'use strict';
-
+var mongoose=require('mongoose');
+var moment=require('moment-timezone');
+var uniqueId=require('shortid32');
 var User = require('../user/user.model');
+var Transaction = require('../user/transaction.model');
 var passport = require('passport');
 var config = require('../../config/environment');
+var smsConfig=require('../../../config.js');
 var jwt = require('jsonwebtoken');
+var sms=require('../sms/sms.controller.js');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -122,18 +127,92 @@ exports.me = function(req, res, next) {
 
 
 exports.searchReceivers = function(req, res, next) {
- var filters=req.body.filters; console.log(filters);
- if(filters!={} && filters.receiverDistance!=undefined)
-  User.find({"receiverInfo.receiverDryGroceries":10}, function(err, user) { // don't ever give out the password or salt
-  console.log("inside",user)
-    if (err) return next(err);
-    if (!user) return res.json(401);
-    res.json(user);
-  });
+ var filters=req.body.filters; console.log("details******->",req.user);
+ var location=req.user.location;console.log("filters...",filters);
+ if(filters!={} && filters.receiverDistance!=undefined) {
+     User.aggregate().near(
+         {
+             near: [location[1], location[0]],
+             spherical: true,//filters.receiverDistance
+             distanceField: 'location',
+             distanceMultiplier: 3959,
+             maxDistance: filters.receiverDistance / 3959,
+             query: {
+                 status: 'inactive', "receiverInfo.receiverPerishableItem": 'yes',
+                 "receiverInfo.receiverRefrigeratedItem": 'yes'
+             }
+         })
+         .exec(function (err, docs) {
+             if (err) console.log(err);
+             else {
+                 console.log(docs)
+                 res.json(docs);
+             }
+         });
+
+ }
 };
+/**
+ *
+ */
+exports.storeItems=function(req, res, next){
+    var donor=req.user;
+    var receiversArray=[];
+    var itemDetails=[];
+    var itemsList=req.body.items; console.log("itemsList",itemsList);
+    var receivers=itemsList.receivers;
+    var code=uniqueId.generate();
+    var count=1;
+    for(var item of itemsList.itemDescription){
+        itemDetails.push(count+") Description:"+item.detail+"-Quantity:"+item.quantity);
+        count++;
+    }
+    for(var receiver of receivers ){
+        receiversArray.push({"contactName":receiver.foodRecoveryInfo.foodRecoveryContactName,
+            "phone":receiver.foodRecoveryInfo.foodRecoveryContactPhone,
+            "receiverId":receiver._id});console.log(receiver);
+        var smsBodyReceiver="Food items of type "+itemsList.filterForReceiver.receiversFilterType.join(', ')+" is being donated. To accept this donation please reply this number" +
+                " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ');
+        var receiverPhone=receiver.foodRecoveryInfo.foodRecoveryContactPhone;receiverPhone="+14084930678";
+        sms.sendSMS('broadcast-'+code,receiverPhone,smsBodyReceiver,function(result){
+            console.log(result);
+        });
+    }
+    var donorTransactionName=itemsList.transaction.name;
+    var donorTransactionPhone=itemsList.transaction.phone;donorTransactionPhone="+14084930678";
+    var smsBodyDonor="Hello "+donorTransactionName+", successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
+        +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
+        +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts. No receivers are accepted after 24 hours from now and transaction is automatically stopped.";
+    sms.sendSMS('Notification-'+code,donorTransactionPhone,smsBodyDonor,function(result){
+        console.log(result);
+    });
+    var newTransaction = new Transaction();
+    newTransaction.receivers=receiversArray;
+    newTransaction.itemDescription=itemsList.itemDescription;
+    newTransaction.filterForReceiver=itemsList.receiversFilterType;
+    newTransaction.transactionDate=moment().format();
+    newTransaction.transactionId=code+moment().format('MMDDYYYYHHmm');
+    newTransaction.code=code;
+    newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"donorId":donor._id};
+    newTransaction.save(function(err, user) {
+        if(err) res.status(400).json(newTransaction)
+    })
+    res.status(200).json(newTransaction);
+};
+
 /**
  * Authentication callback
  */
+
+//var sendReceivers= exports.sendReceivers=function(code,text,to){
+//   //callback("itshere::",text,to,code);
+//    sms.sendSMS('broadcast-'+code,'+14084930678',text,function(result){
+//        console.log(result);
+//        return result
+//    });
+//};
+
+
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };

@@ -1,9 +1,11 @@
 <!-- <div ng-include="'app/components/navbar/navbar.html'"></div>
  -->
 <div class="container">
+    <div class="row">
+        <div class="col-md-12" id="alertContainer3" ng-show="notification" ></div>
+    </div>
  <div class="row">
           <button class="btn btn-sm btn-success"
-             ng-click="addItem(this.user)"
              data-template-url="app/donor/new_item.html"
              data-animation="am-fade-and-scale"
              bs-modal="showModal">Add Item
@@ -14,7 +16,7 @@
             <div class="list-group">
                 <ul>
                     <li class="list-group-item" ng-repeat="list in lists">
-                        <p>Food Type: {{list.donorsFilterType}}</br>Diet Type: {{ list.donorsDietType }}</br> Description: {{ list.detail }}</br> Quantity: {{ list.quantity}}</br>
+                        <p>Food Type: {{list.donorsFoodType}}</br>Diet Type: {{ list.donorsDietType }}</br> Description: {{ list.detail }}</br> Quantity: {{ list.quantity}}</br>
                             <button ng-click="deleteItem(list)" class="btn btn-sm btn-warning" data-title="DELETE Item  -  Cannot be Undone" bs-tooltip>DELETE</button>
                         </p>
                     </li>
@@ -24,22 +26,26 @@
 <!-- 	</div>
 <div class="row"> -->
           <button class="btn btn-danger"
-             ng-click="getReceivers(this.user)"
              data-template-url="app/donor/filter_receivers.html"
              data-animation="am-fade-and-scale"
              bs-modal="showModal">Find Receivers
-          </button><br></br><br></br>
+          </button><br> </br><br> </br>
               <div class="col-md-6">
             <div class="list-group">
                 <ul>
                     <li class="list-group-item" ng-repeat="receiver in closestReceivers">
-                        <p>Email: {{receiver.email}}</br>Ein : {{ receiver.ein }}</br> Address: {{ receiver.address }}</br>
+                        <p>Email: {{receiver.email}}</br>Ein : {{receiver.name}}</br> Address: {{receiver.address}}</br>
 <!--                             <button ng-click="deleteItem(list)" class="btn btn-sm btn-warning" data-title="DELETE Item  -  Cannot be Undone" bs-tooltip>DELETE</button> -->
                         </p>
                     </li>
                 </ul>
             </div>
-        </div>		  
+        </div>
+       <button class="btn btn-primary"
+               data-template-url="app/donor/submit_transaction.html"
+               data-animation="am-fade-and-scale"
+               bs-modal="showModal">Send all
+       </button><br> </br> <br> </br>
 </div>		
   <!--
         <div class="col-md-8">

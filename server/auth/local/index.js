@@ -9,12 +9,21 @@ var router = express.Router();
 router.post('/', function(req, res, next) {
   passport.authenticate('local', function (err, user, info) {
     var error = err || info;
-    if (error) return res.json(401, error);
-    if (!user) return res.json(404, {message: 'Something went wrong, please try again.'});
+    if (error) return res.status(401).json( error);
+    if (!user) return res.status(404).json({message: 'Something went wrong, please try again.'});
 
     var token = auth.signToken(user._id, user.role);
     res.json({token: token});
   })(req, res, next)
+});
+
+router.post('/checkEmail', function(req, res, next) {
+  var emailId=req.body.email;
+  auth.checkUniqueEmail(emailId,function (user, err) {console.log("no error here in index");
+    if (user) return res.status(200).json({exist: 'Email is Unavailable'});
+    else if (err) return res.status(200).json({error: 'Something went wrong, please try again.'});
+    else return res.status(200).json({message: 'Email is available'});
+  });
 });
 
 module.exports = router;

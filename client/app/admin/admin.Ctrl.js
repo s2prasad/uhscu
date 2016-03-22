@@ -68,7 +68,7 @@
     $scope.showModal = function() {
       myModal.$promise.then(myModal.show);
     }
-    // Watch for changes to URL, Scrape and Display the image
+
     $scope.validate=function(data) {
 		console.log("data",data);
 		var ein=data.ein;
@@ -101,7 +101,7 @@
 	
     adminAPI.getAllUsers()
       .then(function(data) {
-        $scope.users = data.data;
+        $scope.users = data.data;console.log("All users",$scope.users);
 		$scope.itemsByPage=5;
 
 		$scope.displayCollection = [].concat($scope.users);

@@ -68,7 +68,20 @@
             return cb(err);
           }.bind(this)).$promise;
       },
-
+      /**
+       * Check Email exist
+       */
+      checkEmail:function(email,callback){
+        var cb = callback || angular.noop;
+console.log("insdie auth.srvc.js",email);
+        $http.post('/auth/local/checkEmail', {
+          email:email
+        }).
+        then(function(data) {
+          console.log("data auth.srvc ",data);
+          cb(data);
+        });
+      },
       /**
        * Change password
        */

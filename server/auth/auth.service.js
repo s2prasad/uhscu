@@ -64,13 +64,36 @@ function signToken(id) {
  * Set token cookie directly for oAuth strategies
  */
 function setTokenCookie(req, res) {
-  if (!req.user) return res.json(404, { message: 'Something went wrong, please try again.'});
-  var token = signToken(req.user._id, req.user.role);
-  res.cookie('token', JSON.stringify(token));
-  res.redirect('/');
+    if (!req.user) return res.json(404, { message: 'Something went wrong, please try again.'});
+    var token = signToken(req.user._id, req.user.role);
+    res.cookie('token', JSON.stringify(token));
+    res.redirect('/');
+}
+
+function checkUniqueEmail(emailId, callback) {
+    console.log("its here",emailId);
+    User.findOne({email:emailId}, function (err, user) {
+        console.log(user);
+        if(user!=null) callback(emailId,null);
+        else if(err) callback(null,err);
+        else callback(null,null);
+    });
+
+    //if (!req.user) return res.json(404, { message: 'Something went wrong, please try again.'});
+    //var token = signToken(req.user._id, req.user.role);
+    //res.cookie('token', JSON.stringify(token));
+    //res.redirect('/');
+    //User.findById(req.user._id, function (err, user) {
+    //    if (err) return next(err);
+    //    if (!user) return res.send(401);
+    //
+    //    req.user = user;
+    //    next();
+    //});
 }
 
 exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
+exports.checkUniqueEmail = checkUniqueEmail;

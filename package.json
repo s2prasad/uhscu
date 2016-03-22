@@ -27,6 +27,7 @@
     "jsonwebtoken": "^5.0.0",
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
+    "moment-timezone": "*",
     "mongoose": "^4.1.2",
     "morgan": "^1.6.1",
     "nodemailer": "^1.3.4",
@@ -39,8 +40,11 @@
     "request": "^2.65.0",
     "requirejs": "^2.1.18",
     "serve-favicon": "^2.3.0",
-    "underscore": "*",
-    "moment-timezone": "*"
+    "shortid": "^2.2.4",
+    "shortid32": "^0.1.0",
+    "tracer": "^0.8.3",
+    "twilio": "^2.9.0",
+    "underscore": "*"
   },
   "engines": {
     "node": ">=0.10.0"
