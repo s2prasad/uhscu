@@ -15,13 +15,13 @@ var smsSent = sms.sentLogs;
 var sendSMS = exports.sendSMS= function(type,toPhone,smsbody,callBack) {
     var fromPhone=config.twilio.NUMBER;
     client.sendMessage({
-        to:toPhone, from: fromPhone,body: smsbody
+        to:"+1"+toPhone, from: fromPhone,body: smsbody
     }, function (err, responseData) {
         if (err)logger.log(err);
         if (!err) {
             var response="Sent sms successfully to: "+responseData.to+" with body: "+responseData.body;
             var newMsg = new smsSent();
-            newMsg.to=toPhone;
+            newMsg.to="+1"+toPhone;
             newMsg.from=fromPhone;
             newMsg.type=type;
             newMsg.body=smsbody;
