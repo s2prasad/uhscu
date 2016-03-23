@@ -138,14 +138,14 @@ exports.searchReceivers = function(req, res, next) {
              distanceMultiplier: 3959,
              maxDistance: filters.receiverDistance / 3959,
              query: {
-                 status: 'active'//, "receiverInfo.receiverPerishableItem": 'yes',
-                 //"receiverInfo.receiverRefrigeratedItem": 'yes'
+                 status: 'inactive', "receiverInfo.receiverPerishableItem": 'yes',
+                 "receiverInfo.receiverRefrigeratedItem": 'yes'
              }
          })
          .exec(function (err, docs) {
              if (err) console.log(err);
              else {
-                 console.log(docs)
+                 console.log("from here->",docs)
                  res.json(docs);
              }
          });
