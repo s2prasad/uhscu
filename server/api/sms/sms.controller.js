@@ -74,7 +74,7 @@ var validateSMS= function(message){
     var errorMsg="Unable to process the message. Please try again";
     var nonActiveMessage ="Your profile is not active. You are not authorized to send this code. Please contact urbanharvester.";
     isCodeExpiredElseUpdate.exec(function (err, result) {
-        if(err) sendSMS(type,phone,errorMsg,function(result){console.log(result);});
+        if(err) sendSMS(type,from,errorMsg,function(result){console.log(result);});
         else if(result!=null){ console.log("isCodeExpiredElseUpdate result",result);//console.log(result.receivers)
             var receiverObj=result.receivers[0].receiverId;
             var donorObj= result.donor.donorId;
@@ -90,17 +90,17 @@ var validateSMS= function(message){
             console.log("from here->",updateTransaction);
             updateTransaction.save(function (err) {
                 if(err){console.log(err)
-                    sendSMS(type,phone,errorMsg,function(result){console.log(result);});
+                    sendSMS(type,from,errorMsg,function(result){console.log(result);});
                 }
                 else {
-                    sendSMS(type,phone,isCodeExpiredElseUpdateMsg,function(result){console.log(result);});
+                    sendSMS(type,from,isCodeExpiredElseUpdateMsg,function(result){console.log(result);});
                     sendSMS(type,donorPhone,donorMsg,function(result){console.log(result);});
                 }
             });
         }
         else{
             isValidCodeReceiver.exec(function (err, result) {
-                if(err) sendSMS(type,phone,errorMsg,function(result){console.log(result);});
+                if(err) sendSMS(type,from,errorMsg,function(result){console.log(result);});
                 else if(result!=null){
                     var donorObj= result.donor.donorId;
                     var donorPhone=result.donor.phone;
@@ -108,29 +108,29 @@ var validateSMS= function(message){
                     var acceptorObj=result.acceptor.receiverId;console.log("donorObj",donorObj);
                     var resendDonorDetails="You have already accepted the donaion. Please visit and collect the donation. The donation store address is "+donorObj.address+" and the contact person name "+donorContactName+", Phone number: "+donorPhone;
                     if(result.donationStatus=='Completed' && acceptorObj.foodRecoveryInfo.foodRecoveryContactPhone==from)
-                        sendSMS(type,phone,resendDonorDetails,function(result){console.log(result);});
+                        sendSMS(type,from,resendDonorDetails,function(result){console.log(result);});
                     else if( result.acceptor!=from)
-                        sendSMS(type,phone,isValidCodeReceiveCodeExp,function(result){console.log(result);});
+                        sendSMS(type,from,isValidCodeReceiveCodeExp,function(result){console.log(result);});
                 }
                 else{
                     isReceiver.exec(function (err, result) {
-                        if(err) sendSMS(type,phone,errorMsg,function(result){console.log(result);});
+                        if(err) sendSMS(type,from,errorMsg,function(result){console.log(result);});
                         else if(result!=null){
                             var receiverObj=result.receivers[0].receiverId;
                             if(receiverObj.status=='Inactive')
-                                sendSMS(type,phone,nonActiveMessage,function(result){console.log(result);});
-                            else sendSMS(type,phone,isValidCodeMsg,function(result){console.log(result);});
+                                sendSMS(type,from,nonActiveMessage,function(result){console.log(result);});
+                            else sendSMS(type,from,isValidCodeMsg,function(result){console.log(result);});
                         }
                         else{
                             isValidCode.exec(function (err, result) {
-                                if(err) sendSMS(type,phone,errorMsg,function(result){console.log(result);});
+                                if(err) sendSMS(type,from,errorMsg,function(result){console.log(result);});
                                 else if(result!=null){
                                     //check code validity
-                                    sendSMS(type,phone,isReceiverMsg,function(result){console.log(result);});
+                                    sendSMS(type,from,isReceiverMsg,function(result){console.log(result);});
                                 }
                                 else{
                                     validCodeMsg="Pleases send the valid code from valid receiver number.";
-                                    sendSMS(type,phone,validCodeMsg,function(result){console.log(result);});
+                                    sendSMS(type,from,validCodeMsg,function(result){console.log(result);});
                                 }
                             });
                         }
