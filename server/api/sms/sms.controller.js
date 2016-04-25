@@ -60,10 +60,10 @@ var validateSMS= function(message){
     var from=phone.substring((phone.length-10), phone.length);
     var isReceiver= User.findOne({"foodRecoveryInfo.foodRecoveryContactPhone":from});
     var isValidCode= Transaction.findOne({code:smsbody,transactionDate:{ $lte:moment().format(), $gt:moment().subtract('24','hours').format()}});
-    var isValidCodeReceiver= Transaction.findOne({code:smsbody,"receivers.phone":from,transactionDate:{ $lte:moment().format(), $gt:moment().subtract('24','hours').format()}},
+    var isValidCodeReceiver= Transaction.findOne({code:smsbody,"receivers.phone":from,status:'active',transactionDate:{ $lte:moment().format(), $gt:moment().subtract('24','hours').format()}},
         {itemDescription:1,donationStatus:1,code:1,donor:1,transactionDate:1,transactionId:1,'receivers.$':1,'acceptor':1} )
     .populate('receivers.receiverId donor.donorId acceptor.receiverId');//check inprogress or completed  or if same from then resend details.
-    var isCodeExpiredElseUpdate=Transaction.findOne({code:smsbody,donationStatus:'Inprogress',transactionDate:{ $lte:moment().format(), $gt:moment().subtract('24','hours').format()},"receivers.phone": from},
+    var isCodeExpiredElseUpdate=Transaction.findOne({code:smsbody,donationStatus:'Inprogress',status:'active',transactionDate:{ $lte:moment().format(), $gt:moment().subtract('24','hours').format()},"receivers.phone": from},
                                 {itemDescription:1,donationStatus:1,code:1,donor:1,transactionDate:1,transactionId:1,'receivers.$':1,$isolated : 1} )
                                 .populate('receivers.receiverId donor.donorId');
     var isReceiverMsg="You are not a valid receiver";
@@ -75,7 +75,7 @@ var validateSMS= function(message){
     var nonActiveMessage ="Your profile is not active. You are not authorized to send this code. Please contact urbanharvester.";
     isCodeExpiredElseUpdate.exec(function (err, result) {
         if(err) sendSMS(type,from,errorMsg,function(result){console.log(result);});
-        else if(result!=null){ console.log("isCodeExpiredElseUpdate result",result);//console.log(result.receivers)
+        else if(result!=null){ //console.log("isCodeExpiredElseUpdate result",result);//console.log(result.receivers)
             var receiverObj=result.receivers[0].receiverId;
             var donorObj= result.donor.donorId;
             var donorPhone=result.donor.phone;
@@ -85,9 +85,9 @@ var validateSMS= function(message){
             var receiverMsg="The donation store address is "+donorObj.address+" and the contact person name "+donorContactName+", Phone number: "+donorPhone;
             isCodeExpiredElseUpdateMsg=isCodeExpiredElseUpdateMsg+" "+receiverMsg;
             var updateTransaction=new Transaction({"_id":result._id ,donationStatus:"Completed"},{ versionKey: '1' });//change to completed
-            updateTransaction.isNew = false;console.log("receiverObj->",receiverObj);
+            updateTransaction.isNew = false;//console.log("receiverObj->",receiverObj);
             updateTransaction.acceptor={receiverId:receiverObj._id};
-            console.log("from here->",updateTransaction);
+           // console.log("from here->",updateTransaction);
             updateTransaction.save(function (err) {
                 if(err){console.log(err)
                     sendSMS(type,from,errorMsg,function(result){console.log(result);});
@@ -117,7 +117,7 @@ var validateSMS= function(message){
                         if(err) sendSMS(type,from,errorMsg,function(result){console.log(result);});
                         else if(result!=null){
                             var receiverObj=result.receivers[0].receiverId;
-                            if(receiverObj.status=='Inactive')
+                            if(receiverObj.status=='inactive')
                                 sendSMS(type,from,nonActiveMessage,function(result){console.log(result);});
                             else sendSMS(type,from,isValidCodeMsg,function(result){console.log(result);});
                         }

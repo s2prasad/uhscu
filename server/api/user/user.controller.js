@@ -28,13 +28,10 @@ exports.index = function(req, res) {
 exports.create = function (req, res, next) {
   var item=req.body;
   var address= item.location.formatted_address;
-    var location={}; var cordinates=[];
-   location.lat=parseFloat(item.location.geometry.location.lat);
-    location.lng=parseFloat(item.location.geometry.location.lng);
-
-    cordinates.push(location.lat);
-    cordinates.push(location.lng);
-    console.log(location); console.log("loc",cordinates);
+  var location={}; var cordinates=[];
+  location.lng=parseFloat(item.location.geometry.location.lng);
+  location.lat=parseFloat(item.location.geometry.location.lat);
+  cordinates=[location.lng,location.lat];
   item=_.omit(item,'location');
   var userObj={};
 	var receiverObj={},donorObj={},transporterObj={},companyObj={},foodRecoveryObj={},vehicleObj={};

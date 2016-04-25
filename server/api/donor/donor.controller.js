@@ -127,20 +127,21 @@ exports.me = function(req, res, next) {
 
 
 exports.searchReceivers = function(req, res, next) {
- var filters=req.body.filters; console.log("details******->",req.user);
- var location=req.user.location;console.log("filters...",filters); var loc=[]; loc=[location[1],location[0]]
+ var filters=req.body.filters;
+ var location=req.user.location;console.log("filters...",filters);
+ var coordinates=[location[0],location[1]]
  if(filters!={} && filters.receiverDistance!=undefined) {
      User.find({
              location: {
-                 $near: loc,
+                 $near: coordinates,
                  $maxDistance: filters.receiverDistance/69
-             },"receiverInfo.receiverDryGroceries":15
+             },status:'active',"receiverInfo.receiverDryGroceries":15
          })
          .exec(function (err, docs) {
              if (err) console.log(err);
              else {
                  console.log("from here->",docs)
-                 res.json(docs);
+                 res.status(200).json(docs);
              }
          });
 
@@ -193,18 +194,6 @@ exports.storeItems=function(req, res, next){
     })
     res.status(200).json(newTransaction);
 };
-
-/**
- * Authentication callback
- */
-
-//var sendReceivers= exports.sendReceivers=function(code,text,to){
-//   //callback("itshere::",text,to,code);
-//    sms.sendSMS('broadcast-'+code,'+14084930678',text,function(result){
-//        console.log(result);
-//        return result
-//    });
-//};
 
 
 exports.authCallback = function(req, res, next) {
