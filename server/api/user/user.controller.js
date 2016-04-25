@@ -28,12 +28,13 @@ exports.index = function(req, res) {
 exports.create = function (req, res, next) {
   var item=req.body;
   var address= item.location.formatted_address;
-    var location={}; var loc=[];
-   location.latitude=parseFloat(item.location.geometry.location.lat);
-    location.longitude=parseFloat(item.location.geometry.location.lng);
-   loc.push(location.latitude);
-    loc.push(location.longitude);
-    console.log(location); console.log("loc",loc);
+    var location={}; var cordinates=[];
+   location.lat=parseFloat(item.location.geometry.location.lat);
+    location.lng=parseFloat(item.location.geometry.location.lng);
+
+    cordinates.push(location.lat);
+    cordinates.push(location.lng);
+    console.log(location); console.log("loc",cordinates);
   item=_.omit(item,'location');
   var userObj={};
 	var receiverObj={},donorObj={},transporterObj={},companyObj={},foodRecoveryObj={},vehicleObj={};
@@ -67,13 +68,16 @@ exports.create = function (req, res, next) {
   newUser.password=item.password;
   newUser.role=item.role;
   newUser.address=address;
-  newUser.location=loc;
-  newUser.status = 'inactive';//console.log("here1 ",newUser);
+  newUser.location=cordinates;
+  newUser.status = 'inactive';console.log("here1 ",newUser);
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
 	if(err) console.log(err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({token: token});
+    else {
+        
+        var token = jwt.sign({_id: user._id}, config.secrets.session, {expiresInMinutes: 60 * 5});
+        res.json({token: token});
+    }
   });
 };
 

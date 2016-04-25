@@ -128,19 +128,13 @@ exports.me = function(req, res, next) {
 
 exports.searchReceivers = function(req, res, next) {
  var filters=req.body.filters; console.log("details******->",req.user);
- var location=req.user.location;console.log("filters...",filters);
+ var location=req.user.location;console.log("filters...",filters); var loc=[]; loc=[location[1],location[0]]
  if(filters!={} && filters.receiverDistance!=undefined) {
-     User.aggregate().near(
-         {
-             near: [location[1], location[0]],
-             spherical: true,//filters.receiverDistance
-             distanceField: 'location',
-             distanceMultiplier: 3959,
-             maxDistance: filters.receiverDistance / 3959,
-             query: {
-                 status: 'inactive', "receiverInfo.receiverPerishableItem": 'yes',
-                 "receiverInfo.receiverRefrigeratedItem": 'yes'
-             }
+     User.find({
+             location: {
+                 $near: loc,
+                 $maxDistance: filters.receiverDistance/69
+             },"receiverInfo.receiverDryGroceries":15
          })
          .exec(function (err, docs) {
              if (err) console.log(err);

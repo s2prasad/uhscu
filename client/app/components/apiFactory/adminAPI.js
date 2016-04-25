@@ -12,11 +12,12 @@
     return {
       getAllUsers: getAllUsers,
       getOneUser: getOneUser,
-      deleteUser: deleteUser
+      deleteUser: deleteUser,
+      updateUser:updateUser
     }
 
     function getAllUsers() {
-      var url = '/api/users';
+      var url = '/api/admin/';
       return $http.get(url, {
         cache: true
       });
@@ -30,6 +31,12 @@
     function deleteUser(user) {
       var url = '/api/users/' + user._id;
       return $http.delete(url);
+    }
+
+    function updateUser(user) {
+      var url = '/api/admin/updateUser';
+      var user = {user:user};
+      return $http.post(url,user);
     }
 
   }

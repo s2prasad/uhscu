@@ -5,14 +5,6 @@
     .module('app')
     .controller('AdminCtrl', AdminCtrl);
 	
-  // angular
-    // .module('app')
-    // .filter('myStrictFilter', function($filter){
-    // return function(input, predicate){
-        // return $filter('filter')(input, predicate, true);
-    // }
-  // });
-	
   angular
     .module('app')
     .filter('unique', function() {
@@ -32,19 +24,19 @@
   });
 
 	
-  AdminCtrl.$inject = ['$scope', 'Auth', '$modal', 'adminAPI', '$alert', 'looksAPI','$filter','$http'];
+  AdminCtrl.$inject = ['$scope', 'Auth', '$modal', 'adminAPI', '$alert','$filter','$http'];
 
-  function AdminCtrl($scope, Auth, $modal, adminAPI, $alert, looksAPI,$filter,$http) {
+  function AdminCtrl($scope, Auth, $modal, adminAPI, $alert,$filter,$http) {
 
-    $scope.looks = [];
+    $scope.update = [];
     $scope.users = [];
     $scope.user = {};
-    $scope.editLook = {};
+    $scope.activationStatuses= [{"value":"active","label":"Activate"},{"value":"inactive","label":"Deactivate"}];
     $scope.deleteBtn = true;
 
     var alertSuccess = $alert({
       title: 'Saved ',
-      content: 'Look has been edited',
+      content: 'Updated Successfully',
       placement: 'top-right',
       container: '#alertContainer',
       type: 'success',
@@ -53,7 +45,7 @@
 
     var alertFail = $alert({
       title: 'Not Saved ',
-      content: 'Look has failed to edit',
+      content: 'Update Failed',
       placement: 'top-right',
       container: '#alertContainer',
       type: 'warning',
@@ -81,19 +73,15 @@
 			orgInfo=orgInfo.organization;
             $scope.showScrapeDetails = true;
             $scope.gotScrapeResults = true;
-            $scope.uploadLookTitle = true;
-            //$scope.look.imgThumb = data.data.img;
 			$scope.user=orgInfo;
           })
           .catch(function(data) {
             console.log('failed to return from scrape');
             $scope.loading = false;
-            //$scope.look.link = '';
             $scope.gotScrapeResults = false;
           })
           .finally(function() {
             $scope.loading = false;
-            $scope.uploadLookForm = false;
           });
       }
 	  else $scope.user={};
@@ -102,7 +90,7 @@
     adminAPI.getAllUsers()
       .then(function(data) {
         $scope.users = data.data;console.log("All users",$scope.users);
-		$scope.itemsByPage=5;
+		$scope.itemsByPage=10;
 
 		$scope.displayCollection = [].concat($scope.users);
 
@@ -128,54 +116,30 @@
         });
     }
 
-    $scope.editLook = function(user) {
+    $scope.userDetails = function(user) {
 		console.log(user);
 		console.log($scope);
 		$scope.user=user;
 		return $scope.user;
-      // looksAPI.getUpdateLook(look)
-        // .then(function(data) {
-          // console.log(data);
-          // $scope.editLook = data.data;
-        // })
-        // .catch(function(err) {
-          // console.log('failed to edit look ' + err);
-        // });
     }
 
-    $scope.saveLook = function() {
-      var look = $scope.editLook;
-
-      looksAPI.updateLook(look)
-        .then(function(data) {
-          console.log('Look updated');
-          console.log(data);
-          $scope.editLook.title = '';
-          $scope.editLook.description = '';
-          alertSuccess.show();
-        })
-        .catch(function(err) {
-          console.log('failed to update' + err);
-          alertFail.show();
-        });
+    $scope.updateStatus = function() {
+      var activationStatus = $scope.update.status;
+      var email=$scope.user.email;
+      var user={email:email,status:activationStatus};
+        adminAPI.updateUser(user)
+            .then(function(data){;
+                var result=data.data.result;
+                if(result=="success") {
+                    $scope.user.status = data.data.details.status;
+                    alertSuccess.show();
+                }
+                if(result=="failed"){
+                    alertFail.show();
+                }
+                $scope.update.status=null;
+            });
     }
-
-    // $scope.deleteLook = function(look) {
-      // looksAPI.deleteLook(look)
-        // .then(function(data) {
-          // var index = $scope.looks.indexOf(look);
-          // $scope.editLook.description = '';
-          // $scope.editLook.title = '';
-          // $scope.deleteBtn = false;
-          // alertSuccess.show();
-          // $scope.looks.splice(index, 1);
-          // console.log('success, look deleted');
-        // })
-        // .catch(function(err) {
-          // alertFail.show();
-          // console.log('failed to delete look' + err);
-        // });
-    // }
 
   }
 })();

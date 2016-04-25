@@ -1,11 +1,12 @@
 var nodemailer = require('nodemailer');
-var user = require('./api/user/user.controller.js')
+var user = require('./api/user/user.controller.js');
+var config = require('./config/environment');
 
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'swordanchorthesis@gmail.com',
-        pass: 'hackreactor1'
+        user: 'urbanharvesterscu@gmail.com',
+        pass: 'Scu@987654'
     }
 });
 
@@ -15,10 +16,10 @@ exports.reset = function(req, res) {
     var newPass = user.resetPassword(req.query.email);
 
     var mailOptions = {
-        from: 'SnapIt Team <swordanchorthesis@gmail.com>', // sender address
+        from: 'SnapIt Team <urbanharvesterscu@gmail.com>', // sender address
         to: req.query.email,
-        subject: 'New SnapIt password.', // Subject line
-        html: '<b>Your new password is ' + newPass + '.  </b><a href="http://localhost:9000/login">Login here.</a>' // html body
+        subject: 'New UrbanHarvester password.', // Subject line
+        html: '<b>Your new password is ' + newPass + '.  </b><a href='+config.url+'"/login">Login here.</a>' // html body
     };
 
     transporter.sendMail(mailOptions, function(error, info){

@@ -50,7 +50,14 @@
     "node": ">=0.10.0"
   },
   "private": true,
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-watch": "^1.0.0"
+  },
   "description": "From the command line navigate to this folder and run:\r 1. npm install\r 2. bower install",
   "scripts": {
     "start": "node server/app.js",
@@ -61,5 +68,8 @@
     "url": "https://github.com/vyompvscu/urbanharvesterscu/"
   },
   "author": "Vyomesh P V",
-  "license": "ISC"
+  "license": "ISC",
+  "directories": {
+    "test": "test"
+  }
 }
