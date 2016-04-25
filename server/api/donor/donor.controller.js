@@ -129,32 +129,25 @@ exports.me = function(req, res, next) {
 exports.searchReceivers = function(req, res, next) {
  var filters=req.body.filters;
  var location=req.user.location;
- var receiverSearchFilter;
+ var receiverSearchFilterConstruct;
  var receiverInfo=[];//var item={};
  var coordinates=[location[0],location[1]];
  if(filters.receiversFilterType!=undefined) {
      for (var filter of filters.receiversFilterType) {
          receiverInfo.push('"receiverInfo.' + filter + '":"yes"');
-         // var name="receiverInfo."+filter;
-         // item[name]="yes";
      }
- }//console.log("receiverInfo::::",item);
- //var options='\"active\"'+", "+receiverInfo.join(', ');console.log("options",options);
+ }
  if(filters!={} && filters.receiverDistance!=undefined) {
-     receiverSearchFilter='{location:{ $near: ['+coordinates+'], $maxDistance: "'+filters.receiverDistance/69+'"},role:"receiver",status:"active", '+receiverInfo.join(', ')+'}';
-    // receiverSearchFilter.status='active';console.log("Object.keys(receiverInfo).length",Object.keys(receiverInfo).length);
-     // if(Object.keys(receiverInfo).length!=0){
-     //     receiverSearchFilter.receiverInfo={ receiverRefrigeratedItem: "yes" } ;
-     // }
-     //console.log("receiverSearchFilter->",receiverSearchFilter);
-     var receiverSearchFilterStringEvaluate = JSON.stringify(eval('('+receiverSearchFilter+')'))
+     //near mongoose find not accepting 'filers:{receiverInfo.receiverFreezerType' but accepts '"filers.receiverInfo.receiverFreezerType"', hence
+     //below receiverSearchFilterConstruct creates the parameter in string and the convert to valid object before passing to mongoose.
+     receiverSearchFilterConstruct='{location:{ $near: ['+coordinates+'], $maxDistance: "'+filters.receiverDistance/69+'"},role:"receiver",status:"active", '+receiverInfo.join(', ')+'}';
+     var receiverSearchFilterStringEvaluate = JSON.stringify(eval('('+receiverSearchFilterConstruct+')'))
      var receiverSearchFilterObject =JSON.parse(receiverSearchFilterStringEvaluate);
-     console.log("json",receiverSearchFilterObject)
+     console.log("receiverSearchFilterObject json::",receiverSearchFilterObject)
      User.find(receiverSearchFilterObject)
          .exec(function (err, docs) {
-             if (err) console.log(err);
+             if (err) res.status(403);
              else {
-                 //console.log("from here->",docs)
                  res.status(200).json(docs);
              }
          });
