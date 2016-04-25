@@ -128,28 +128,27 @@ exports.me = function(req, res, next) {
 
 exports.searchReceivers = function(req, res, next) {
  var filters=req.body.filters;
- var location=req.user.location;console.log("filters...",filters);
+ var location=req.user.location;
  var receiverSearchFilter;
- var receiverInfo=[];var item={};
+ var receiverInfo=[];//var item={};
  var coordinates=[location[0],location[1]];
  for(var filter of filters.receiversFilterType){
     receiverInfo.push('"receiverInfo.'+filter+'":"yes"');
      // var name="receiverInfo."+filter;
      // item[name]="yes";
  }//console.log("receiverInfo::::",item);
- var options='\"active\"'+", "+receiverInfo.join(', ');console.log("options",options);
+ //var options='\"active\"'+", "+receiverInfo.join(', ');console.log("options",options);
  if(filters!={} && filters.receiverDistance!=undefined) {
-     receiverSearchFilter='{location:{ $near: "'+coordinates+'", $maxDistance: "'+filters.receiverDistance/69+'"},role:"receiver",status:"active", '+receiverInfo.join(', ')+'}';
+     receiverSearchFilter='{location:{ $near: ['+coordinates+'], $maxDistance: "'+filters.receiverDistance/69+'"},role:"receiver",status:"active", '+receiverInfo.join(', ')+'}';
     // receiverSearchFilter.status='active';console.log("Object.keys(receiverInfo).length",Object.keys(receiverInfo).length);
      // if(Object.keys(receiverInfo).length!=0){
      //     receiverSearchFilter.receiverInfo={ receiverRefrigeratedItem: "yes" } ;
      // }
-     console.log("receiverSearchFilter->",receiverSearchFilter);
-     var str = JSON.stringify(eval('('+receiverSearchFilter+')'))
-     var json ={};
-     json=JSON.parse(str);
-     console.log(typeof json); console.log("json",json.location)
-     User.find(json)
+     //console.log("receiverSearchFilter->",receiverSearchFilter);
+     var receiverSearchFilterStringEvaluate = JSON.stringify(eval('('+receiverSearchFilter+')'))
+     var receiverSearchFilterObject =JSON.parse(receiverSearchFilterStringEvaluate);
+     console.log("json",receiverSearchFilterObject)
+     User.find(receiverSearchFilterObject)
          .exec(function (err, docs) {
              if (err) console.log(err);
              else {
