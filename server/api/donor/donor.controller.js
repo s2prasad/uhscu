@@ -132,10 +132,12 @@ exports.searchReceivers = function(req, res, next) {
  var receiverSearchFilter;
  var receiverInfo=[];//var item={};
  var coordinates=[location[0],location[1]];
- for(var filter of filters.receiversFilterType){
-    receiverInfo.push('"receiverInfo.'+filter+'":"yes"');
-     // var name="receiverInfo."+filter;
-     // item[name]="yes";
+ if(filters.receiversFilterType!=undefined) {
+     for (var filter of filters.receiversFilterType) {
+         receiverInfo.push('"receiverInfo.' + filter + '":"yes"');
+         // var name="receiverInfo."+filter;
+         // item[name]="yes";
+     }
  }//console.log("receiverInfo::::",item);
  //var options='\"active\"'+", "+receiverInfo.join(', ');console.log("options",options);
  if(filters!={} && filters.receiverDistance!=undefined) {
@@ -168,6 +170,9 @@ exports.storeItems=function(req, res, next){
     var itemDetails=[];
     var itemsList=req.body.items; console.log("itemsList",itemsList);
     var receivers=itemsList.receivers;
+    var donorTransactionName=itemsList.transaction.name;
+    var donorTransactionPhone=itemsList.transaction.phone;
+    var note=itemsList.transaction.note;
     var code=uniqueId.generate();
     var count=1;
     for(var item of itemsList.itemDescription){
@@ -179,15 +184,12 @@ exports.storeItems=function(req, res, next){
             "phone":receiver.foodRecoveryInfo.foodRecoveryContactPhone,
             "receiverId":receiver._id});console.log(receiver);
         var smsBodyReceiver="Food items of type "+itemsList.filterForReceiver.receiversFilterType.join(', ')+" is being donated. To accept this donation please reply this number" +
-                " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ');
+                " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ')+"Note:"+note+"\n";
         var receiverPhone=receiver.foodRecoveryInfo.foodRecoveryContactPhone;
         sms.sendSMS('broadcast-'+code,receiverPhone,smsBodyReceiver,function(result){
             console.log(result);
         });
     }
-    var donorTransactionName=itemsList.transaction.name;
-    var donorTransactionPhone=itemsList.transaction.phone;
-    var note=itemsList.transaction.note;
     var smsBodyDonor="Hello "+donorTransactionName+", successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
         +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')+"Note:"+note+"\n"
         +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts. No receivers are accepted after 24 hours from now and transaction is automatically stopped.";
