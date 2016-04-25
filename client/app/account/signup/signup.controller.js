@@ -25,7 +25,7 @@
       name: 'bstimepicker',
       extends: 'input',
 	 template:'<formly-transclude></formly-transclude><i class="fa fa-clock-o"><label class="control-label"></label>\
-            <input type="text" class="form-control" size="8" ng-model="model[options.key]" name="model[options.name]" bs-timepicker data-time-format="HH:mm" data-length="1" data-minute-step="1" data-arrow-behavior="picker"></i>'
+            <input type="text" class="form-control" size="9" ng-model="model[options.key]" name="model[options.name]" bs-timepicker  data-minute-step="1" data-arrow-behavior="picker"></i>'
     });
 	formlyConfigProvider.setType({
         name:'placeAutoComplete',
@@ -146,10 +146,10 @@
 	$scope.place = null;
     $scope.register = function(form) {
       $scope.submitted = true;	
-	  console.log("here 6",vm.model.location)
-	  console.log("here2",vm.model);
-	  console.log("here3",vm.model.location.formatted_address,"lat",vm.model.location.geometry.location.lat()," lng::",vm.model.location.geometry.location.lng());
-	  console.log("here1",JSON.stringify(vm.model));
+	  // console.log("here 6",vm.model.location)
+	  // console.log("here2",vm.model);
+	  // console.log("here3",vm.model.location.formatted_address,"lat",vm.model.location.geometry.location.lat()," lng::",vm.model.location.geometry.location.lng());
+	  // console.log("here1",JSON.stringify(vm.model));
       if (form.$valid && vm.model!={}) {
         Auth.createUser(
           vm.model
@@ -291,8 +291,8 @@
                 type: 'number',
 				maxlength: '9',
 				minlength:'5',
-                label: 'Ein Tax no.',
-                placeholder: '1234567890',
+                label: 'EIN Tax no.',
+                placeholder: '123456789',
                 required: true
             },
 			hideExpression: 'model.role!="receiver"'
@@ -437,11 +437,11 @@
 			hideExpression: 'model.role!="receiver"'
 		},
 		{
-			key: 'receiverSlackMeals',
+			key: 'receiverSackMeals',
 			type: 'input',
 			templateOptions: {
 				type: 'text',
-				label: 'Slack meals provided per month',
+				label: 'Sack meals provided per month',
 				placeholder: '25 lbs',
 				required: true				   
 			},

@@ -129,18 +129,31 @@ exports.me = function(req, res, next) {
 exports.searchReceivers = function(req, res, next) {
  var filters=req.body.filters;
  var location=req.user.location;console.log("filters...",filters);
- var coordinates=[location[0],location[1]]
+ var receiverSearchFilter;
+ var receiverInfo=[];var item={};
+ var coordinates=[location[0],location[1]];
+ for(var filter of filters.receiversFilterType){
+    receiverInfo.push('"receiverInfo.'+filter+'":"yes"');
+     // var name="receiverInfo."+filter;
+     // item[name]="yes";
+ }//console.log("receiverInfo::::",item);
+ var options='\"active\"'+", "+receiverInfo.join(', ');console.log("options",options);
  if(filters!={} && filters.receiverDistance!=undefined) {
-     User.find({
-             location: {
-                 $near: coordinates,
-                 $maxDistance: filters.receiverDistance/69
-             },status:'active',"receiverInfo.receiverDryGroceries":15
-         })
+     receiverSearchFilter='{location:{ $near: "'+coordinates+'", $maxDistance: "'+filters.receiverDistance/69+'"},role:"receiver",status:"active", '+receiverInfo.join(', ')+'}';
+    // receiverSearchFilter.status='active';console.log("Object.keys(receiverInfo).length",Object.keys(receiverInfo).length);
+     // if(Object.keys(receiverInfo).length!=0){
+     //     receiverSearchFilter.receiverInfo={ receiverRefrigeratedItem: "yes" } ;
+     // }
+     console.log("receiverSearchFilter->",receiverSearchFilter);
+     var str = JSON.stringify(eval('('+receiverSearchFilter+')'))
+     var json ={};
+     json=JSON.parse(str);
+     console.log(typeof json); console.log("json",json.location)
+     User.find(json)
          .exec(function (err, docs) {
              if (err) console.log(err);
              else {
-                 console.log("from here->",docs)
+                 //console.log("from here->",docs)
                  res.status(200).json(docs);
              }
          });
@@ -175,8 +188,9 @@ exports.storeItems=function(req, res, next){
     }
     var donorTransactionName=itemsList.transaction.name;
     var donorTransactionPhone=itemsList.transaction.phone;
+    var note=itemsList.transaction.note;
     var smsBodyDonor="Hello "+donorTransactionName+", successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
-        +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
+        +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')+"Note:"+note+"\n"
         +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts. No receivers are accepted after 24 hours from now and transaction is automatically stopped.";
     sms.sendSMS('Notification-'+code,donorTransactionPhone,smsBodyDonor,function(result){
         console.log(result);
@@ -188,7 +202,7 @@ exports.storeItems=function(req, res, next){
     newTransaction.transactionDate=moment().format();
     newTransaction.transactionId=code+moment().format('MMDDYYYYHHmm');
     newTransaction.code=code;
-    newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"donorId":donor._id};
+    newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"note":note,"donorId":donor._id};
     newTransaction.save(function(err, user) {
         if(err) res.status(400).json(newTransaction)
     })
