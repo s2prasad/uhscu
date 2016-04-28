@@ -22,8 +22,9 @@
             <th st-sort="name">Name</th>
             <th st-sort="email">Email</th>
             <th st-sort="address">Address</th>
+            <th st-sort="status">Activation Status</th>
             <th st-sort="role">Role</th>
-			<th st-sort="role">Ein</th>
+			<th st-sort="Ein">Ein</th>
         </tr>
         <tr>
             <th>
@@ -33,8 +34,15 @@
                 <input st-search="email" placeholder="search for email" class="input-sm form-control" type="search"/>
             </th>
             <th>
-                <input st-search="address" placeholder="search for address" class="input form-control" type="search"/>
+                <input st-search="address" placeholder="search for address" class="input-sm form-control" type="search"/>
             </th>
+            <th>
+                <select st-search="status">
+                    <option value="">All</option>
+                    <option value="inactive">inactive</option>
+                </select>
+            </th>
+
             <th>
                 <select st-search="role">
                     <option value="">All</option>
@@ -48,18 +56,19 @@
             <td>{{row.name | uppercase}}</td>
             <td>{{row.email | lowercase}}</td>
             <td>{{row.address}}</td>
+            <td>{{row.status}}</td>
             <td>{{row.role}}</td>
 			<td>{{row.ein}}</td>
             <td><button ng-click="deleteUser(row)" class="btn btn-sm btn-warning" data-title="DELETE User  -  Cannot be Undone" bs-tooltip>DELETE</button></td>		
             <td>
-        <button class="lookLink"
-             ng-click="editLook(row)"
+        <button class="userDetails"
+             ng-click="userDetails(row)"
              data-template-url="app/admin/update_user.html"
              data-animation="am-fade-and-scale"
              bs-modal="showModal">Activate
           </button></td>
             <td>
-        <button class="lookLink"
+        <button class="validate"
              ng-click="validate(row)"
              data-template-url="app/admin/validate_userinfo.html"
              data-animation="am-flip-x"

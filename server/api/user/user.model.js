@@ -19,8 +19,8 @@ var UserSchema = new Schema({
   salt: String,
   status:String,
   address:String,
-  location:{type: [Number],  // [<longitude>, <latitude>]
-      index: '2d' },
+    location:{type: [Number],  // [<longitude>, <latitude>]
+        index: '2d' },
   registeredDate:String,
   companyInfo:Object,
   foodRecoveryInfo:Object,

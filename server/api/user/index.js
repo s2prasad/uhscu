@@ -18,7 +18,6 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 
 router.post('/me', controller.me);
 router.post('/', controller.create);
-
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
 module.exports = router;

@@ -127,26 +127,28 @@ exports.me = function(req, res, next) {
 
 
 exports.searchReceivers = function(req, res, next) {
- var filters=req.body.filters; console.log("details******->",req.user);
- var location=req.user.location;console.log("filters...",filters);
+ var filters=req.body.filters;
+ var location=req.user.location;
+ var receiverSearchFilterConstruct;
+ var receiverInfo=[];//var item={};
+ var coordinates=[location[0],location[1]];
+ if(filters.receiversFilterType!=undefined) {
+     for (var filter of filters.receiversFilterType) {
+         receiverInfo.push('"receiverInfo.' + filter + '":"yes"');
+     }
+ }
  if(filters!={} && filters.receiverDistance!=undefined) {
-     User.aggregate().near(
-         {
-             near: [location[1], location[0]],
-             spherical: true,//filters.receiverDistance
-             distanceField: 'location',
-             distanceMultiplier: 3959,
-             maxDistance: filters.receiverDistance / 3959,
-             query: {
-                 status: 'inactive', "receiverInfo.receiverPerishableItem": 'yes',
-                 "receiverInfo.receiverRefrigeratedItem": 'yes'
-             }
-         })
+     //near mongoose find not accepting 'filers:{receiverInfo.receiverFreezerType' but accepts '"filers.receiverInfo.receiverFreezerType"', hence
+     //below receiverSearchFilterConstruct creates the parameter in string and the convert to valid object before passing to mongoose.
+     receiverSearchFilterConstruct='{location:{ $near: ['+coordinates+'], $maxDistance: "'+filters.receiverDistance/69+'"},role:"receiver",status:"active", '+receiverInfo.join(', ')+'}';
+     var receiverSearchFilterStringEvaluate = JSON.stringify(eval('('+receiverSearchFilterConstruct+')'))
+     var receiverSearchFilterObject =JSON.parse(receiverSearchFilterStringEvaluate);
+     console.log("receiverSearchFilterObject json::",receiverSearchFilterObject)
+     User.find(receiverSearchFilterObject)
          .exec(function (err, docs) {
-             if (err) console.log(err);
+             if (err) res.status(403);
              else {
-                 console.log("from here->",docs)
-                 res.json(docs);
+                 res.status(200).json(docs);
              }
          });
 
@@ -161,6 +163,9 @@ exports.storeItems=function(req, res, next){
     var itemDetails=[];
     var itemsList=req.body.items; console.log("itemsList",itemsList);
     var receivers=itemsList.receivers;
+    var donorTransactionName=itemsList.transaction.name;
+    var donorTransactionPhone=itemsList.transaction.phone;
+    var note=itemsList.transaction.note;
     var code=uniqueId.generate();
     var count=1;
     for(var item of itemsList.itemDescription){
@@ -172,16 +177,14 @@ exports.storeItems=function(req, res, next){
             "phone":receiver.foodRecoveryInfo.foodRecoveryContactPhone,
             "receiverId":receiver._id});console.log(receiver);
         var smsBodyReceiver="Food items of type "+itemsList.filterForReceiver.receiversFilterType.join(', ')+" is being donated. To accept this donation please reply this number" +
-                " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ');
+                " with code: "+code +"\nFood items include:\n "+itemDetails.join('\n ')+"Note:"+note+"\n";
         var receiverPhone=receiver.foodRecoveryInfo.foodRecoveryContactPhone;
         sms.sendSMS('broadcast-'+code,receiverPhone,smsBodyReceiver,function(result){
             console.log(result);
         });
     }
-    var donorTransactionName=itemsList.transaction.name;
-    var donorTransactionPhone=itemsList.transaction.phone;
     var smsBodyDonor="Hello "+donorTransactionName+", successfully sent sms to receivers, your transaction is in progress. The food types selected were: "
-        +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')
+        +itemsList.filterForReceiver.receiversFilterType.join(', ')+".\nThe donation item includes:\n "+itemDetails.join('\n ')+"Note:"+note+"\n"
         +".\nYou will receive an sms when someone accepts donation. Transaction is stopped after first receiver accepts. No receivers are accepted after 24 hours from now and transaction is automatically stopped.";
     sms.sendSMS('Notification-'+code,donorTransactionPhone,smsBodyDonor,function(result){
         console.log(result);
@@ -193,24 +196,12 @@ exports.storeItems=function(req, res, next){
     newTransaction.transactionDate=moment().format();
     newTransaction.transactionId=code+moment().format('MMDDYYYYHHmm');
     newTransaction.code=code;
-    newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"donorId":donor._id};
+    newTransaction.donor={"phone":donorTransactionPhone,"contactName":donorTransactionName,"note":note,"donorId":donor._id};
     newTransaction.save(function(err, user) {
         if(err) res.status(400).json(newTransaction)
     })
     res.status(200).json(newTransaction);
 };
-
-/**
- * Authentication callback
- */
-
-//var sendReceivers= exports.sendReceivers=function(code,text,to){
-//   //callback("itshere::",text,to,code);
-//    sms.sendSMS('broadcast-'+code,'+14084930678',text,function(result){
-//        console.log(result);
-//        return result
-//    });
-//};
 
 
 exports.authCallback = function(req, res, next) {

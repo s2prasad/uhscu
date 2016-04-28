@@ -3,7 +3,8 @@
 // Production specific configuration
 // =================================
 module.exports = {
-  // Server IP
+  url: "http://urbanharvesterscu.herokuapp.com",
+    // Server IP
   ip:       process.env.OPENSHIFT_NODEJS_IP ||
             process.env.IP ||
             undefined,

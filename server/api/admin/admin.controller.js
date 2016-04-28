@@ -1,6 +1,6 @@
 'use strict';
 
-var User = require('./admin.model');
+var User = require('../user/user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -15,9 +15,9 @@ var validationError = function(res, err) {
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
+  User.find({ role: { $ne: 'admin' } }, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-    res.json(200, users);
+    res.status(200).json(users);
   });
 };
 
@@ -116,7 +116,11 @@ exports.me = function(req, res, next) {
   });
 };
 
-
+/**
+ * *Get Tax id info from api
+ * @param req
+ * @param res
+ */
 exports.getNonProfitInfo= function(req, res) {
 	var ein=req.body.ein;
 var options = { method: 'GET',
@@ -130,6 +134,22 @@ request(options, function (error, response, body) {
 });
 };
 
+/**
+ * Updated the user activation status
+ */
+exports.editUser = function(req, res) {
+  var user=req.body.user;
+console.log("inside admin/edit  controller",req.body.user.email);
+  var findUserAndUpdateStatus=User.findOneAndUpdate({"email":user.email},{"status":user.status},{new:true});
+  findUserAndUpdateStatus.exec(function (err, updatedUser) { console.log("insideadminontroller",updatedUser);
+    if(updatedUser!=null && !err){
+      return res.status(200).json({result:"success",details:updatedUser});
+    }
+    else if(err) return res.status(200).json({result:"failed",error:err});
+    else return res.status(200).json({result:"failed"});
+  });
+
+};
 /**
  * Authentication callback
  */

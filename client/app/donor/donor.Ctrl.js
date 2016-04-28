@@ -18,7 +18,7 @@
 	$scope.donorsFoodType =[];
 	$scope.donorsDietType=[];
     $scope.deleteBtn = true;
-	$scope.itemFilters= [{"value":"precooked","label":"Precooked"},{"value":"readyToServe","label":"Ready to Serve"},{"value":"raw","label":"Raw"},{"value":"frozen","label":"Frozen"},{"value":"reheat","label":"Reheat"}];
+	$scope.itemFilters= [{"value":"receiverFreezerItem","label":"Freezer"},{"value":"receiverRefrigeratedItem","label":"Refrigerated"},{"value":"receiverPerishableItem","label":"Perishable"}];
 	$scope.itemDiets= [{"value":"Protein","label":"Protein"},{"value":"Vegetable","label":"Vegetable"},{"value":"Dairy","label":"Dairy"}];
     $scope.notification=false;
 
